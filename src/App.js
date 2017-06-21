@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
@@ -7,12 +6,20 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+
+            <h1>Welcome to SwarmUI</h1>
+            <h2>Welcome to SwarmUI</h2>
+            <h3>Welcome to SwarmUI</h3>
+            <h4>Welcome to SwarmUI</h4>
         </div>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+          <a href="#">Link</a>
+          <button>
+              Hit me
+          </button>
+          <label>Foo</label>
       </div>
     );
   }

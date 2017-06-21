@@ -3,6 +3,7 @@ const bluebird = global.Promise = require('bluebird');
 const client = require('./wrapper');
 
 const nodeId = 'q4uspon353dljf83pjctxi3nm';
+const serviceName = 'w1';
 
 describe('Feature: Management', function() {
 
@@ -127,7 +128,7 @@ describe('Feature: Management', function() {
                     return client.post(`/nodes/${nodeId}/update?version=${version}`, update);
                 })
                 .then(response => {
-                    assert.equal(response.statusCode, 200);  // no body when 200OK
+                    assert.equal(response.statusCode, 200);  // no body when 200ok
                     done();
                 })
                 .catch(err => {
@@ -162,9 +163,67 @@ describe('Feature: Management', function() {
 
         });
 
-        it('Should create a Service');
+        it('Should create a Service', function (done) {
 
-        it('Should remove a Service');
+            let serviceDescription = {
+                Name: serviceName,
+                TaskTemplate: {
+                    ContainerSpec: {
+                        Image: 'chrisjstevenson/nodejs-starter:latest@sha256:e5dacb6240c51668781863f75db38e8c82a20733954b86b680500b8e734afa3e',
+                        Args: [
+                            'node',
+                            'app.js'
+                        ],
+                        DNSConfig: {}
+                    },
+                    Resources: {
+                        Limits: {},
+                        Reservations: {}
+                    },
+                    RestartPolicy: {
+                        Condition: 'on-failure',  // or any
+                        Delay: 10000000000,  // or don't specify
+                        MaxAttempts: 10  // or 0 for infinite
+                    },
+                    Mode: {
+                        Replicated: {
+                            Replicas: 2
+                        },
+                        UpdateConfig: {
+                            Parallelism: 1,
+                            FailureAction: 'pause',
+                            MaxFailureRatio: 0
+                        },
+                        EndpointSpec: {
+                            Mode: 'dnsrr',
+                            Ports: [
+                                {
+                                    Protocol: 'tcp',
+                                    TargetPort: 9002,
+                                    PublishMode: 'host'
+                                }
+                            ]
+                        }
+
+                    }
+                }
+            };
+
+            client.post('/services/create', serviceDescription)
+                .then(response => {
+                   //console.log(response.body);
+                   assert.equal(response.statusCode, 201);
+                   done();
+                });
+        });
+
+        it('Should remove a Service', function (done) {
+            client.delete(`/services/${serviceName}`)
+                .then(response => {
+                    assert.equal(response.statusCode, 200);
+                    done();
+                })
+        });
     });
 
 
@@ -172,7 +231,7 @@ describe('Feature: Management', function() {
     //  but you manage at a Service level, see Story: Services.
     describe('Story: Tasks', function (done) {
 
-        it ('Should list Tasks', function () {
+        it ('Should list Tasks', function (done) {
 
             client.get('/tasks')
                 .then(response => {
@@ -185,11 +244,29 @@ describe('Feature: Management', function() {
                     assert.exists(data.NodeID);
                     assert.equal(data.Status.State, 'running');
                     assert.exists(data.Status.ContainerStatus.ContainerID);
+                    done()
                 });
 
         });
 
-        it ('Should list Port Mapping');
+        it ('Should list Port Mapping', function (done) {
+
+            client.get('/tasks')
+                .then(response => {
+                    return JSON.parse(response.body);
+                })
+                .map(task => {
+                   return task.Status.PortStatus.Ports; // yes you could have multiple ports mapped
+                })
+                .then(portInfo => {
+                    //console.log(portInfo);
+                    assert.equal(portInfo[0][0].Protocol, 'tcp');
+                    assert.equal(portInfo[0][0].TargetPort, 9002);
+                    assert.exists(portInfo[0][0].PublishedPort);
+                    assert.equal(portInfo[0][0].PublishMode, 'host');
+                    done();
+                })
+        });
 
     });
 
