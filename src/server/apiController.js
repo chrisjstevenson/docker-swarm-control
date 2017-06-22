@@ -17,19 +17,20 @@ if(process.env.DOCKER_HOST) {
     }
 }
 
+// Note - I don't think this is the right way to do this
 apiController.getSwarm = function(req, res) {
-    return request.getAsync(`${url}/swarm`).then(response => res.json(response.body));
+    return request.getAsync(`${url}/swarm`).then(response => res.send(response.body));
 };
 
 apiController.getAllNodes = function(req, res) {
-    return request.getAsync(`${url}/nodes`).then(response => res.json(response.body));
+    return request.getAsync(`${url}/nodes`).then(response => res.send(response.body));
 };
 
 apiController.getAllServices = function(req, res) {
-    return request.getAsync(`${url}/services`).then(response => res.json(response.body));
+    return request.getAsync(`${url}/services`).then(response => res.send(response.body));
 };
 
 apiController.getAllTasks = function(req, res) {
-    return request.getAsync(`${url}/tasks`).then(response => res.json(response.body));
+    return request.getAsync(`${url}/tasks`).then(response => res.send(response.body));
 };
 
