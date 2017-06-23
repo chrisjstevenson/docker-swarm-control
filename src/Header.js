@@ -8,11 +8,11 @@ class Header extends Component {
     render() {
         return (
             <div className="App-header">
-                <FlatButton label="Swarm" />
-                <FlatButton label="Nodes" />
-                <FlatButton label="Services" />
-                <FlatButton label="Tasks" />
-                <FlatButton label="Networks" disabled={true} />
+                <FlatButton label="Swarm" href="/" />
+                <FlatButton label="Nodes" href="/nodes" />
+                <FlatButton label="Services" href="/services" />
+                <FlatButton label="Tasks" href="/tasks" />
+                <FlatButton label="Networks" disabled={true} href="/networks" />
             </div>
         );
     }

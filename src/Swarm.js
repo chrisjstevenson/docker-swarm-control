@@ -17,20 +17,20 @@ class Swarm extends Component {
         };
     }
 
-    componentDidMount() {
-        fetch('/swarm')
-            .then(res => res.json())
-            .then(swarmInfo => this.setState({
-                id: swarmInfo.ID,
-                name: swarmInfo.Spec.Name,
-                createdAt: swarmInfo.CreatedAt,
-                updatedAt: swarmInfo.UpdatedAt,
-                joinTokens: {
-                    worker: swarmInfo.JoinTokens.Worker,
-                    manager: swarmInfo.JoinTokens.Manager
-                },
-            }))
-    }
+    // componentDidMount() {
+    //     fetch('/swarm')
+    //         .then(res => res.json())
+    //         .then(swarmInfo => this.setState({
+    //             id: swarmInfo.ID,
+    //             name: swarmInfo.Spec.Name,
+    //             createdAt: swarmInfo.CreatedAt,
+    //             updatedAt: swarmInfo.UpdatedAt,
+    //             joinTokens: {
+    //                 worker: swarmInfo.JoinTokens.Worker,
+    //                 manager: swarmInfo.JoinTokens.Manager
+    //             },
+    //         }))
+    // }
 
     render() {
         return(
