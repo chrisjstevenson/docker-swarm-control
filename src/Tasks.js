@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-class Hosts extends Component {
+class Tasks extends Component {
 
     render() {
         return (
-            <div>hi i'm nodes</div>
+            <div>hi i'm tasks</div>
         );
     };
 }
 
-export default Hosts;
+export default Tasks;
