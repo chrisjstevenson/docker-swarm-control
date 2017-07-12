@@ -29,7 +29,15 @@ describe('Feature: Management', function() {
                 })
         });
 
-        it('Should get Join Command');
+        it('Should get Join-Token', function(done) {
+            client.get('/swarm')
+                .then(res => {
+                   assert.equal(res.statusCode, 200);
+                   let data = JSON.parse(res.body);
+                   assert.exists(data.JoinTokens.Worker);
+                   done();
+                });
+        });
     });
 
     describe('Story: Node', function () {

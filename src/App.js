@@ -15,9 +15,6 @@ class App extends Component {
                 {/*header*/}
                 <Header />
 
-                <p className="App-intro">
-                  To get started, edit <code>src/App.js</code> and save to reload.
-                </p>
                 {/*content*/}
                 <Main />
 
