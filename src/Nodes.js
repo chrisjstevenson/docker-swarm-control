@@ -1,38 +1,39 @@
 import React, { Component } from 'react';
 
-class Nodes extends Component {
+export default class Nodes extends Component {
 
     constructor() {
         super();
-        this.state = {
-            items: []
-        }
+        this.state = {allNodes:[]}
+    }
+
+    getNodes() {
+        fetch('/nodes')
+            .then(res => res.json())
+            .then(allNodes => this.setState({allNodes}))
     }
 
     componentDidMount() {
-        fetch('/nodes')
-            .then(res => res.json())
-            .then(allNodes => this.setState({
-                items: allNodes
-            }))
+        this.getNodes();
     }
 
     render() {
+        const {allNodes} = this.state;
         return (
-
-            <div>
-            { this.state.items.map(item => {
-                return <div className="hostname" key={item.ID}>
-                    <div>NodeID:  {item.ID}</div>
-                    <div>HostName:  {item.Description.Hostname}</div>
-                    <div>Docker v{item.Description.Engine.EngineVersion} on {item.Description.Platform.OS} {item.Description.Platform.Architecture}</div>
-                    <div>Status: {item.Spec.Availability}</div>
-                </div>
-            })
-            }
+            <div className="Info-left">
+                <div>Nodes</div>
+                {
+                    allNodes.map(nodeInfo => {
+                    return <ul className="hostname" key={nodeInfo.ID}>
+                        <li>ID:  {nodeInfo.ID}</li>
+                        <li>Hostname:  {nodeInfo.Description.Hostname}</li>
+                        <li>{nodeInfo.Status.Addr}</li>
+                        <li>Docker v{nodeInfo.Description.Engine.EngineVersion} on {nodeInfo.Description.Platform.OS} {nodeInfo.Description.Platform.Architecture}</li>
+                        <li>Status: {nodeInfo.Spec.Availability}</li>
+                        <li>IsLeader: {nodeInfo.ManagerStatus.Leader.toString()}</li>
+                    </ul>
+                })}
             </div>
         );
     };
 }
-
-export default Nodes;

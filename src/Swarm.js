@@ -1,51 +1,37 @@
 import React, { Component } from 'react';
 import './Swarm.css';
 
-class Swarm extends Component {
+export default class Swarm extends Component {
 
     constructor() {
         super();
-        this.state = {
-            id: '',
-            name: '',
-            createdAt: '',
-            updatedAt: '',
-            joinTokens: {
-                worker: '',
-                manager: ''
-            }
-        };
+        this.state = { swarm: { JoinTokens: {}, Spec: {}} };
+    }
+
+    getSwarm() {
+        fetch('/swarm')
+            .then(res => res.json())
+            .then(swarm => this.setState({swarm}));
     }
 
     componentDidMount() {
-        fetch('/swarm')
-            .then(res => res.json())
-            .then(swarmInfo => this.setState({
-                id: swarmInfo.ID,
-                name: swarmInfo.Spec.Name,
-                createdAt: swarmInfo.CreatedAt,
-                updatedAt: swarmInfo.UpdatedAt,
-                joinTokens: {
-                    worker: swarmInfo.JoinTokens.Worker,
-                    manager: swarmInfo.JoinTokens.Manager
-                },
-            }))
+        this.getSwarm();
     }
 
     render() {
+        const {swarm} = this.state;
         return(
             <div className="Info-left">
                 <div>Swarm</div>
                 <ul>
-                    <li>ID: { this.state.id }</li>
-                    <li>Name: { this.state.name }</li>
-                    <li>Created Date: { this.state.createdAt }</li>
-                    <li>Last Updated: { this.state.updatedAt }</li>
-                    <li>Worker Join Token: { this.state.joinTokens.worker }</li>
+                    <li>ID: {swarm.ID}</li>
+                    <li>Name: { swarm.Spec.Name }</li>
+                    <li>Created Date: { swarm.CreatedAt }</li>
+                    <li>Last Updated: { swarm.UpdatedAt }</li>
+                    <li>Manager Join Token: {swarm.JoinTokens.Manager}</li>
+                    <li>Worker Join Token: {swarm.JoinTokens.Worker}</li>
                 </ul>
             </div>
         );
     }
 }
-
-export default Swarm;
