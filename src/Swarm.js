@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
+import {getSwarmData} from './util/swarm-api.js'
 import './Swarm.css';
 
 export default class Swarm extends Component {
 
     constructor() {
         super();
-        this.state = { swarm: { JoinTokens: {}, Spec: {}} };
+        this.state = {swarm: {JoinTokens: {}, Spec: {}}, nodes: []}
     }
 
+
     getSwarm() {
-        fetch('/swarm')
-            .then(res => res.json())
-            .then(swarm => this.setState({swarm}));
+        getSwarmData()
+            .then(({swarm, nodes}) => {
+                this.setState({swarm, nodes})
+        });
     }
 
     componentDidMount() {
@@ -20,6 +23,7 @@ export default class Swarm extends Component {
 
     render() {
         const {swarm} = this.state;
+        const {nodes} = this.state;
         return(
             <div className="Info-left">
                 <div>Swarm</div>
@@ -30,6 +34,7 @@ export default class Swarm extends Component {
                     <li>Last Updated: { swarm.UpdatedAt }</li>
                     <li>Manager Join Token: {swarm.JoinTokens.Manager}</li>
                     <li>Worker Join Token: {swarm.JoinTokens.Worker}</li>
+                    <li>Number of nodes in Cluster: {nodes.length}</li>
                 </ul>
             </div>
         );

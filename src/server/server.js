@@ -13,5 +13,5 @@ app.listen(port, (err) => {
     if (err) {
         return log.error('[x] Error while starting Server.js', err)
     }
-    log.info(`[*] Server.js listening on ${port}`)
+    log.info(`[*] proxy listening on ${port}, waiting for client...`)
 });
