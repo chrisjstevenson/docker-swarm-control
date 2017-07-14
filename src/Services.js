@@ -32,9 +32,12 @@ export default class Services extends Component {
     render() {
         const {services, tasks} = this.state;
         return (
-            <ServiceTable serviceData={services}
-                          tasksData={tasks}
-            />
+            <div className="Container">
+                <div>Services</div>
+                    <ServiceTable serviceData={services}
+                                  tasksData={tasks}
+                    />
+            </div>
         );
     };
 }
@@ -42,8 +45,7 @@ export default class Services extends Component {
 class ServiceTable extends Component {
     render() {
         return (
-         <div className="Container">
-             <div>Services</div>
+
                  <Table>
                      <TableHeader>
                          <TableRow>
@@ -73,7 +75,7 @@ class ServiceTable extends Component {
                          }
                      </TableBody>
                 </Table>
-         </div>
+
         )
     }
 }
