@@ -30,7 +30,7 @@ export default class Nodes extends Component {
                         <li>{nodeInfo.Status.Addr}</li>
                         <li>Docker v{nodeInfo.Description.Engine.EngineVersion} on {nodeInfo.Description.Platform.OS} {nodeInfo.Description.Platform.Architecture}</li>
                         <li>Status: {nodeInfo.Spec.Availability}</li>
-                        <li>IsLeader: {nodeInfo.ManagerStatus.Leader.toString()}</li>
+                        {/*<li>IsLeader: {nodeInfo.ManagerStatus.Leader.toString()}</li>*/}
                     </ul>
                 })}
             </div>

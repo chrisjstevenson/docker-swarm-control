@@ -1,3 +1,10 @@
 .Info-left {
+    margin-left: 60px;
     text-align: left;
+}
+
+.Container {
+    text-align: left;
+    margin-left: 60px;
+    margin-right: 60px;
 }

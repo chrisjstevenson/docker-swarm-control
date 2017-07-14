@@ -22,8 +22,7 @@ export default class Swarm extends Component {
     }
 
     render() {
-        const {swarm} = this.state;
-        const {nodes} = this.state;
+        const {swarm, nodes} = this.state;
         return(
             <div className="Info-left">
                 <div>Swarm</div>

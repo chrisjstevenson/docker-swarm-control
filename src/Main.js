@@ -6,7 +6,7 @@ import Services from './Services';
 import Tasks from './Tasks';
 import Networks from './Networks';
 
-class Main extends Component {
+export default class Main extends Component {
 
     render() {
         return (
@@ -23,5 +23,3 @@ class Main extends Component {
         );
     };
 }
-
-export default Main;

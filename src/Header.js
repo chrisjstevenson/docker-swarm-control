@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import './Header.css';
 
-class Header extends Component {
+export default class Header extends Component {
     render() {
         return (
             <div className="App-header">
@@ -15,5 +15,3 @@ class Header extends Component {
         );
     }
 }
-
-export default Header;

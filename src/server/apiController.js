@@ -26,6 +26,10 @@ apiController.getAllNodes = function(req, res) {
     return request.getAsync(`${url}/nodes`).then(response => res.send(response.body));
 };
 
+apiController.getNode = function(req, res) {
+    return request.getAsync(`${url}/nodes/${req.params.nodeId}`).then(response => res.send(response.body));
+};
+
 apiController.getAllServices = function(req, res) {
     return request.getAsync(`${url}/services`).then(response => res.send(response.body));
 };
