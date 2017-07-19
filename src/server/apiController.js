@@ -17,24 +17,39 @@ if(process.env.DOCKER_HOST) {
     }
 }
 
-// Note - I don't think this is the right way to do this
+// Note - I really don't think this is the right way to do this
+apiController.getVersion = function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    return request.getAsync(`${url}/version`).then(response => res.send(response.body));
+};
+
 apiController.getSwarm = function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/swarm`).then(response => res.send(response.body));
 };
 
 apiController.getAllNodes = function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/nodes`).then(response => res.send(response.body));
 };
 
 apiController.getNode = function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/nodes/${req.params.nodeId}`).then(response => res.send(response.body));
 };
 
 apiController.getAllServices = function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/services`).then(response => res.send(response.body));
 };
 
 apiController.getAllTasks = function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/tasks`).then(response => res.send(response.body));
+};
+
+apiController.getNetworks = function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    return request.getAsync(`${url}/networks`).then(response => res.send(response.body));
 };
 
