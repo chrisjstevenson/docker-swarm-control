@@ -7,9 +7,9 @@ module.exports = function(app) {
     app.get('/tasks', apiController.getAllTasks);
     app.get('/nodes/:nodeId', apiController.getNode);
 
+    app.get('/v1.24/version', apiController.getVersion);
     app.get('/v1.24/services', apiController.getAllServices);
     app.get('/v1.24/tasks', apiController.getAllTasks);
-    app.get('/v1.24', apiController.getVersion);
     app.get('/v1.24/networks', apiController.getNetworks);
 
     app.get('/', apiController.getVersion);
