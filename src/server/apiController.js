@@ -46,21 +46,7 @@ apiController.getAllServices = function(req, res) {
 apiController.getAllTasks = function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     //return request.getAsync(`${url}/tasks`).then(response => res.send(response.body));
-    return request.getAsync(`${url}/tasks`)
-        .then(response => {
-            let toJson = JSON.parse(response.body);
-
-            return Promise.map(toJson, (task) => {
-                //task.Status.PortStatus.Ports[0].TargetPort = task.Status.PortStatus.Ports[0].PublishedPort;
-                //task.NetworksAttachments[0].Addresses[0] = "72.16.55.28/24";  // or from somewhere
-
-                return task;
-            });
-        })
-        .then(alteredTasks => {
-            res.send(alteredTasks)
-
-        });
+    return request.getAsync(`${url}/tasks`).then(response => res.send(response.body));
 };
 
 apiController.getNetworks = function(req, res) {
