@@ -7,4 +7,6 @@ config.consoleLogLevel = {
     error: "error"
 };
 
+config.dnsSuffix = ".westus2.cloudapp.azure.com";
+
 module.exports = config;

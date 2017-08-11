@@ -1,0 +1,34 @@
+/*
+ Services.js
+
+ Without routing mesh, need to find the VM, then find the task which has the port mapping info
+*/
+
+_.filter(this.props.tasksData, (t) => { return t.ServiceID === svc.ID }).map(tsk => {
+ return <ServiceLink key={tsk.ID} task={tsk} />
+ })
+
+class ServiceLink extends Component {
+    constructor() {
+        super();
+        this.state = { ip: '' }
+    }
+
+    componentDidMount() {
+        getNode(this.props.task.NodeID)
+            .then(nodeData => {
+                this.setState({ip: nodeData.Status.Addr})
+            });
+    }
+
+    render() {
+        let ip = this.state.ip;
+        let port = this.props.task.Status.PortStatus.Ports[0].PublishedPort;
+
+        return (
+            <a className="Service-link" href={`http://${ip}:${port}`} target="_blank" rel="noopener noreferrer">{port}</a>
+        )
+    }
+}
+
+

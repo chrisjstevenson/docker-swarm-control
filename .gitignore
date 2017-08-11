@@ -6,9 +6,9 @@
 # testing
 /coverage
 
-# production
+# configuration
 /build
-/config
+/src/config
 
 # misc
 .idea
