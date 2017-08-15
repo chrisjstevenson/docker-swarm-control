@@ -82,8 +82,6 @@ describe('Feature: Management', function() {
                         Role: 'manager'
                     };
 
-                    console.log(targetNode.ID);
-
                     return client.post(`/nodes/${targetNode.ID}/update?version=${targetNode.Version.Index}`, update);
                 })
                 .then(response => {

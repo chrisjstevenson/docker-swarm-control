@@ -8,29 +8,17 @@ import {
     TableRowColumn,
 } from 'material-ui/Table';
 import config from './config/config';
-import {getServiceData} from './util/swarm-api.js';
 import './Services.css';
 
 export default class Services extends Component {
 
-    constructor() {
-        super();
-        this.state = {services: [], nodes: []}
-    }
-
-    getServices() {
-        getServiceData()
-            .then(({services, nodes}) => {
-                this.setState({services, nodes})
-        });
-    }
-
-    componentDidMount() {
-        this.getServices();
-    }
-
     render() {
-        const {services, nodes} = this.state;
+
+        let listOfServices = [];
+        if (this.props.serviceData) {
+            listOfServices = this.props.serviceData
+        }
+
         let key = 0;
 
         return (
@@ -48,7 +36,7 @@ export default class Services extends Component {
                     <TableBody>
                         {
                             // for each service
-                            services.map(svc => {
+                            listOfServices.map(svc => {
                                 return <TableRow key={svc.ID}>
                                     <TableRowColumn>{svc.ID}</TableRowColumn>
                                     <TableRowColumn>{svc.Spec.Name}</TableRowColumn>
@@ -58,11 +46,11 @@ export default class Services extends Component {
                                             svc.Endpoint.Spec.Ports.map(p => {
                                                 key++;
                                                 return <a
-                                                          key={key}
-                                                          className="Service-link"
-                                                          href={`http://${nodes[0].Description.Hostname}${config.dnsSuffix}:${p.PublishedPort}`}
-                                                          target="_blank"
-                                                          rel="noopener noreferrer">{p.PublishedPort}
+                                                  key={key}
+                                                  className="Service-link"
+                                                  href={`http://${this.props.nodeData[0].Description.Hostname}${config.dnsSuffix}:${p.PublishedPort}`}
+                                                  target="_blank"
+                                                  rel="noopener noreferrer">{p.PublishedPort}
                                                 </a>
 
                                             })

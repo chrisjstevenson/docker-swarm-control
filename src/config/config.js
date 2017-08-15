@@ -1,12 +1,13 @@
-const environment = process.env.NODE_ENV || 'development';
+module.exports.config = {
 
-const config = require('./env/' + environment);
-config.consoleLogLevel = {
-    debug: "debug",
-    info: "info",
-    error: "error"
+    environment: process.env.NODE_ENV || 'development',
+
+    consoleLogLevel: {
+        debug: "debug",
+        info: "info",
+        error: "error"
+    },
+
+    dnsSuffix: ".westus2.cloudapp.azure.com"
+
 };
-
-config.dnsSuffix = ".westus2.cloudapp.azure.com";
-
-module.exports = config;

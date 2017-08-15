@@ -6,10 +6,12 @@ function getSwarmData() {
     return axios.all([
         axios.get(`/swarm`),
         axios.get(`/nodes`),
+        axios.get('/services')
     ])
-    .then(([swarm, nodes]) => ({
-        swarm: swarm.data,
-        nodes: nodes.data
+    .then(([swarmResponse, nodesResponse, servicesResponse]) => ({
+        swarm: swarmResponse.data,
+        nodes: nodesResponse.data,
+        services: servicesResponse.data
     }));
 }
 

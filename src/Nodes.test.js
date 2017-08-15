@@ -1,33 +1,24 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import { expect } from 'chai';
 import Nodes from './Nodes';
-import nodeData from './util/nodes.json';
-import moxios from 'moxios';
+import { getNodeData } from './util/stub';
 
 describe('List Nodes', function () {
 
-    beforeEach(function () {
-        moxios.install()
+    it('renders component.', () => {
+        const component = shallow(<Nodes />);
+        const item = <div>Nodes</div>;
+
+        expect(component.contains(item)).equal(true);
     });
 
-    afterEach(function () {
-        moxios.uninstall()
-    });
+    it('lists all node data.', () => {
 
-    it('renders node id', () => {
+        const component = shallow(<Nodes nodeData={getNodeData()} />);
+        const item = <li>ID: 15fbf36l7woc27iqyfflu7ovg</li>;
 
-       // console.log(nodeData);
-
-        moxios.stubRequest('/nodes', {
-            status: 200,
-            response: { body: nodeData }
-        });
-
-        const wrapper = shallow(<Nodes />);
-        const id = <li>ID: m0utgrzme6artj0mqjpojcii2</li>;
-        //const id = <div>Nodes</div>;
-        expect(wrapper.contains(id)).toEqual(true);
+        expect(component.contains(item)).equal(true);
+        expect(component.instance().props.nodeData.length).equal(4);
     });
 });
-
-
