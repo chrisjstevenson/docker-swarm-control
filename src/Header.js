@@ -9,7 +9,7 @@ export default class Header extends Component {
                 <FlatButton label="Swarm" href="/" />
                 <FlatButton label="Nodes" href="/nodes" />
                 <FlatButton label="Services" href="/services" />
-                <FlatButton label="Tasks" href="/tasks" />
+                <FlatButton label="Tasks" disabled={true} href="/tasks" />
                 <FlatButton label="Networks" disabled={true} href="/networks" />
             </div>
         );

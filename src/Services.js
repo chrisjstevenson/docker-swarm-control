@@ -9,6 +9,7 @@ import {
 } from 'material-ui/Table';
 import config from './config/config';
 import './Services.css';
+import EditServiceMenu from './EditServiceMenu';
 
 export default class Services extends Component {
 
@@ -16,7 +17,7 @@ export default class Services extends Component {
 
         let listOfServices = [];
         if (this.props.serviceData) {
-            listOfServices = this.props.serviceData
+            listOfServices = this.props.serviceData;
         }
 
         let key = 0;
@@ -25,12 +26,14 @@ export default class Services extends Component {
             <div className="Container">
                 <div>Services</div>
                 <Table>
-                    <TableHeader>
+                    <TableHeader displaySelectAll={false}>
                         <TableRow>
                             <TableHeaderColumn>id</TableHeaderColumn>
                             <TableHeaderColumn>name</TableHeaderColumn>
+                            <TableHeaderColumn>replicas</TableHeaderColumn>
                             <TableHeaderColumn>image</TableHeaderColumn>
                             <TableHeaderColumn>ports</TableHeaderColumn>
+                            <TableHeaderColumn />
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -40,6 +43,7 @@ export default class Services extends Component {
                                 return <TableRow key={svc.ID}>
                                     <TableRowColumn>{svc.ID}</TableRowColumn>
                                     <TableRowColumn>{svc.Spec.Name}</TableRowColumn>
+                                    <TableRowColumn>{svc.Spec.Mode.Replicated.Replicas}</TableRowColumn>
                                     <TableRowColumn>{svc.Spec.TaskTemplate.ContainerSpec.Image.split('@')[0]}</TableRowColumn>
                                     <TableRowColumn>
                                         {
@@ -52,10 +56,10 @@ export default class Services extends Component {
                                                   target="_blank"
                                                   rel="noopener noreferrer">{p.PublishedPort}
                                                 </a>
-
                                             })
                                         }
                                     </TableRowColumn>
+                                    <TableRowColumn><EditServiceMenu /></TableRowColumn>
                                 </TableRow>
                             })
                         }
