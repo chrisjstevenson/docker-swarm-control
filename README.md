@@ -1,4 +1,4 @@
-# docker-swarm-ontrol 
+# docker-swarm-control 
 
 [![Build Status](https://travis-ci.org/chrisjstevenson/docker-swarm-control.svg?branch=master)](https://travis-ci.org/chrisjstevenson/docker-swarm-control.svg?branch=master)
 
