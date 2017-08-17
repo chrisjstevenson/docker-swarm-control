@@ -1,8 +1,11 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import Popover, {PopoverAnimationVertical} from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+
+import EditServiceDialog from './EditServiceDialog';
 
 export default class EditServiceMenu extends React.Component {
 
@@ -11,9 +14,11 @@ export default class EditServiceMenu extends React.Component {
 
         this.state = {
             open: false,
+            editorOpen: false
         };
     }
 
+    // open edit menu
     handleTouchTap = (event) => {
         // This prevents ghost click.
         event.preventDefault();
@@ -24,22 +29,57 @@ export default class EditServiceMenu extends React.Component {
         });
     };
 
+    // close edit menu
     handleRequestClose = () => {
         this.setState({
             open: false,
+            editorOpen: false,
+        })
+    };
+
+    // close dialog
+    handleClose = () => {
+        this.setState({
+            open: false,
+            editorOpen: false
         });
     };
 
+    // select menu item
     handleMenuTouchTap = (event, value) => {
 
-        console.log(value.props.primaryText);
+        switch(value.props.primaryText) {
+            case "Settings":
+                this.setState({
+                    open: false,
+                    editorOpen: true
+                });
+                break;
+            default:
+                return;
+        }
     };
 
     render() {
+
+        const actions = [
+            <FlatButton
+                label="Cancel"
+                primary={true}
+                onClick={this.handleClose}
+            />,
+            <FlatButton
+                label="Submit"
+                primary={true}
+                keyboardFocused={true}
+                onClick={this.handleClose}  /* or handleSubmit */
+            />,
+        ];
+
         return (
             <div>
                 <FlatButton
-                    secondary={true}
+                    primary={true}
                     onClick={this.handleTouchTap}
                     label="Edit"
                 />
@@ -57,6 +97,18 @@ export default class EditServiceMenu extends React.Component {
                         <MenuItem primaryText="Remove" />
                     </Menu>
                 </Popover>
+
+                <Dialog
+                    title="Modify Service"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.editorOpen}
+                    onRequestClose={this.handleClose}>
+
+                    <EditServiceDialog/>
+
+                </Dialog>
+
             </div>
         );
     }

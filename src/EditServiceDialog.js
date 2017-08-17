@@ -1,52 +1,66 @@
-import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import React, {Component} from 'react';
+import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
+import MenuItem from 'material-ui/MenuItem';
 
-export default class EditServiceDialog extends React.Component {
+const styles = {
+    customWidth: {
+        width: 150,
+    },
+};
 
+export default class EditServiceDialog extends Component {
     state = {
-        open: false,
-    };
-
-    handleOpen = () => {
-        this.setState({open: true});
-    };
-
-    handleClose = () => {
-        this.setState({open: false});
+        value: 1,
     };
 
     handleChange = (event, index, value) => this.setState({value});
 
     render() {
-        const actions = [
-            <FlatButton
-                label="Cancel"
-                primary={true}
-                onClick={this.handleClose}
-            />,
-            <FlatButton
-                label="Submit"
-                primary={true}
-                keyboardFocused={true}
-                onClick={this.handleClose}
-            />,
-        ];
-
         return (
             <div>
-                {/*<RaisedButton secondary={true} label="Edit" onClick={this.handleOpen} />*/}
-
-                <Dialog
-                    title="Modify Service"
-                    actions={actions}
-                    modal={false}
-                    open={this.state.open}
-                    onRequestClose={this.handleClose}>
-
-                    Modify Service Dialog
-
-                </Dialog>
+                <SelectField
+                    floatingLabelText="Frequency"
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                >
+                    <MenuItem value={1} primaryText="Never" />
+                    <MenuItem value={2} primaryText="Every Night" />
+                    <MenuItem value={3} primaryText="Weeknights" />
+                    <MenuItem value={4} primaryText="Weekends" />
+                    <MenuItem value={5} primaryText="Weekly" />
+                </SelectField>
+                <br />
+                <SelectField floatingLabelText="Frequency" value={1} disabled={true}>
+                    <MenuItem value={1} primaryText="Disabled" />
+                    <MenuItem value={2} primaryText="Every Night" />
+                </SelectField>
+                <br />
+                <SelectField
+                    floatingLabelText="Frequency"
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    style={styles.customWidth}
+                >
+                    <MenuItem value={1} primaryText="Custom width" />
+                    <MenuItem value={2} primaryText="Every Night" />
+                    <MenuItem value={3} primaryText="Weeknights" />
+                    <MenuItem value={4} primaryText="Weekends" />
+                    <MenuItem value={5} primaryText="Weekly" />
+                </SelectField>
+                <br />
+                <SelectField
+                    floatingLabelText="Frequency"
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    autoWidth={true}
+                >
+                    <MenuItem value={1} primaryText="Auto width" />
+                    <MenuItem value={2} primaryText="Every Night" />
+                    <MenuItem value={3} primaryText="Weeknights" />
+                    <MenuItem value={4} primaryText="Weekends" />
+                    <MenuItem value={5} primaryText="Weekly" />
+                </SelectField>
             </div>
         );
     }
