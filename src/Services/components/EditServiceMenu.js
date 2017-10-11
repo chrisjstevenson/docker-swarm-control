@@ -99,13 +99,13 @@ export default class EditServiceMenu extends React.Component {
                 </Popover>
 
                 <Dialog
-                    title="Modify Service"
+                    title={`Edit Service`}
                     actions={actions}
                     modal={false}
                     open={this.state.editorOpen}
                     onRequestClose={this.handleClose}>
 
-                    <EditServiceDialog/>
+                    <EditServiceDialog serviceObject={this.props.serviceObject} />
 
                 </Dialog>
 

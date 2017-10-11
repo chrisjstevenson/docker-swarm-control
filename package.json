@@ -30,7 +30,7 @@
     "request": "^2.81.0"
   },
   "scripts": {
-    "start": "concurrently \"node src/server/server.js\" \"react-scripts start\"",
+    "start": "concurrently \"node src/devproxy/server.js\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "CI=true npm run react-test",
     "int-spec": "node node_modules/mocha/bin/mocha \"src/**/*.intspec.js\"",

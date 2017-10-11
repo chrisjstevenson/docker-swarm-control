@@ -7,9 +7,10 @@ import {
     TableRow,
     TableRowColumn,
 } from 'material-ui/Table';
-import config from './config/config';
-import './Services.css';
-import EditServiceMenu from './EditServiceMenu';
+import config from './../config/config';
+import './index.css';
+import EditServiceMenu from './components/EditServiceMenu';
+import os from 'os';
 
 export default class Services extends Component {
 
@@ -52,14 +53,14 @@ export default class Services extends Component {
                                                 return <a
                                                   key={key}
                                                   className="Service-link"
-                                                  href={`http://${this.props.nodeData[0].Description.Hostname}${config.dnsSuffix}:${p.PublishedPort}`}
+                                                  href={`http://${os.hostname()}:${p.PublishedPort}`}
                                                   target="_blank"
                                                   rel="noopener noreferrer">{p.PublishedPort}
                                                 </a>
                                             })
                                         }
                                     </TableRowColumn>
-                                    <TableRowColumn><EditServiceMenu /></TableRowColumn>
+                                    <TableRowColumn><EditServiceMenu serviceObject={svc} /></TableRowColumn>
                                 </TableRow>
                             })
                         }

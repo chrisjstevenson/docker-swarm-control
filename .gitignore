@@ -9,6 +9,7 @@
 # configuration
 /build
 /src/config
+/docker/tls
 
 # misc
 .idea

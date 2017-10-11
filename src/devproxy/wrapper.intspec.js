@@ -1,3 +1,6 @@
+/*
+  Created just for learning the Docker API
+*/
 const assert = require('chai').assert;
 const bluebird = global.Promise = require('bluebird');
 const client = require('./wrapper');

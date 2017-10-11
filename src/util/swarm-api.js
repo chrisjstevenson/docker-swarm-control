@@ -15,6 +15,7 @@ function getSwarmData() {
     }));
 }
 
+//
 function getServiceData() {
     return axios.all([
         axios.get(`/services`),

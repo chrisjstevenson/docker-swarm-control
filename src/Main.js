@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom'
 import Swarm from './Swarm';
 import Nodes from './Nodes';
-import Services from './Services';
+import Services from './Services/';
 import Tasks from './Tasks';
 import Networks from './Networks';
 import {getSwarmData} from './util/swarm-api.js';

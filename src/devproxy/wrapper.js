@@ -1,3 +1,6 @@
+/*
+  Created just for learning the Docker API
+*/
 const assert  = require('assert');
 const request = Promise.promisifyAll(require('request'));
 const _ = require('lodash');
@@ -49,5 +52,4 @@ module.exports.delete = function (path) {
     updates override the existing spec. So you need to send the whole spec back.
 
   - Post can update or create an entity
-
  */

@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import Services from './Services';
-import { getServiceData, getNodeData } from './util/stub';
+import Services from './index';
+import { getServiceData, getNodeData } from '../util/stub';
 
 describe('List Services', function () {
 
