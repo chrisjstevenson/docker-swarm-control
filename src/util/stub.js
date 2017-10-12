@@ -1,4 +1,4 @@
-export {getSwarmData, getNodeData, getServiceData, getTasksData};
+export {getSwarmData, getNodeData, getServiceData, getTasksData, getServiceWithNoEndpointConfig};
 
 function getSwarmData() {
     return {
@@ -470,6 +470,84 @@ function getServiceData() {
             }
         }
     ];
+}
+
+function getServiceWithNoEndpointConfig() {
+    return [
+        {
+            "ID": "ubfzvn0nahswtjrtbd77eu8r4",
+            "Version": {
+                "Index": 123
+            },
+            "CreatedAt": "2017-10-10T21:55:50.629162296Z",
+            "UpdatedAt": "2017-10-12T18:27:19.887011725Z",
+            "Spec": {
+                "Name": "pineapple",
+                "Labels": {
+                    "crude": "word"
+                },
+                "TaskTemplate": {
+                    "ContainerSpec": {
+                        "Image": "chrisjstevenson/pineapple:latest@sha256:76625e913f2c5d4bc6f2ae2bfb88be467d8a1b69fde1f272322141dbc51e503a",
+                        "DNSConfig": {}
+                    },
+                    "Resources": {
+                        "Limits": {},
+                        "Reservations": {}
+                    },
+                    "Placement": {
+                        "Platforms": [
+                            {
+                                "Architecture": "amd64",
+                                "OS": "linux"
+                            }
+                        ]
+                    },
+                    "ForceUpdate": 0,
+                    "Runtime": "container"
+                },
+                "Mode": {
+                    "Replicated": {
+                        "Replicas": 6
+                    }
+                }
+            },
+            "PreviousSpec": {
+                "Name": "pineapple",
+                "Labels": {
+                    "crude": "word"
+                },
+                "TaskTemplate": {
+                    "ContainerSpec": {
+                        "Image": "chrisjstevenson/pineapple:latest@sha256:76625e913f2c5d4bc6f2ae2bfb88be467d8a1b69fde1f272322141dbc51e503a",
+                        "DNSConfig": {}
+                    },
+                    "Resources": {
+                        "Limits": {},
+                        "Reservations": {}
+                    },
+                    "Placement": {
+                        "Platforms": [
+                            {
+                                "Architecture": "amd64",
+                                "OS": "linux"
+                            }
+                        ]
+                    },
+                    "ForceUpdate": 0,
+                    "Runtime": "container"
+                },
+                "Mode": {
+                    "Replicated": {
+                        "Replicas": 4
+                    }
+                }
+            },
+            "Endpoint": {
+                "Spec": {}
+            }
+        }
+    ]
 }
 
 function getTasksData() {

@@ -3,12 +3,14 @@ const Promise = global.Promise = require('bluebird');
 const assert = require('assert');
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 const client = require('./wrapper');
 const app = express();
 const port = 3001;
 
 app.use(morgan('dev'));
+app.use(bodyParser.json());
 
 require('./routes')(app);
 

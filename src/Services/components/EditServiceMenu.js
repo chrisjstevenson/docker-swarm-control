@@ -4,17 +4,22 @@ import Dialog from 'material-ui/Dialog';
 import Popover, {PopoverAnimationVertical} from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
-
-import EditServiceDialog from './EditServiceDialog';
+import EditServiceFields from './EditServiceFields';
 
 export default class EditServiceMenu extends React.Component {
+
+    //Props:
+    //  target (the service description we want to modify)
+
 
     constructor(props) {
         super(props);
 
         this.state = {
             open: false,
-            editorOpen: false
+            editorOpen: false,
+            labels: this.props.labels,
+            scale: this.props.scale,
         };
     }
 
@@ -45,6 +50,14 @@ export default class EditServiceMenu extends React.Component {
         });
     };
 
+    handleSubmit = () => {
+        this.props.target.updateScale(this.state.scale);
+        this.setState({
+            open: false,
+            editorOpen: false
+        });
+    }
+
     // select menu item
     handleMenuTouchTap = (event, value) => {
 
@@ -60,8 +73,24 @@ export default class EditServiceMenu extends React.Component {
         }
     };
 
-    render() {
+    handleFieldChange = (field, value) => {
+        switch(field) {
+            case "labelsField":
+                this.setState({
+                    labels: value
+                });
+                break; 
+            case "scaleField":
+                this.setState({
+                    scale: value
+                });
+                break;               
+            default:
+                return;
+        }
+    }
 
+    render() {
         const actions = [
             <FlatButton
                 label="Cancel"
@@ -72,7 +101,7 @@ export default class EditServiceMenu extends React.Component {
                 label="Submit"
                 primary={true}
                 keyboardFocused={true}
-                onClick={this.handleClose}  /* or handleSubmit */
+                onClick={this.handleSubmit} 
             />,
         ];
 
@@ -104,9 +133,7 @@ export default class EditServiceMenu extends React.Component {
                     modal={false}
                     open={this.state.editorOpen}
                     onRequestClose={this.handleClose}>
-
-                    <EditServiceDialog serviceObject={this.props.serviceObject} />
-
+                    <EditServiceFields target={this.props.target} onChange={this.handleFieldChange} />
                 </Dialog>
 
             </div>

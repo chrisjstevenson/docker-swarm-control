@@ -5,8 +5,10 @@ module.exports = function(app) {
     app.get('/swarm', controller.getSwarm);
     app.get('/nodes', controller.getAllNodes);
     app.get('/services', controller.getAllServices);
+    app.get('/services/:id', controller.getServiceById);
+    app.post('/services/:id/update', controller.updateService);
     app.get('/tasks', controller.getAllTasks);
-    app.get('/nodes/:nodeId', controller.getNode);
+    app.get('/nodes/:id', controller.getNodeById);
 
     // Support for windows routes
     app.get('/v1.24/version', controller.getVersion);

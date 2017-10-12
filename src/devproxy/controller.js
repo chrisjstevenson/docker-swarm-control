@@ -35,15 +35,40 @@ controller.getAllNodes = function(req, res) {
     return request.getAsync(`${url}/nodes`).then(response => res.send(response.body));
 };
 
-controller.getNode = function(req, res) {
+controller.getNodeById = function(req, res) {
     res.setHeader('Content-Type', 'application/json');
-    return request.getAsync(`${url}/nodes/${req.params.nodeId}`).then(response => res.send(response.body));
+    return request.getAsync(`${url}/nodes/${req.params.id}`).then(response => res.send(response.body));
 };
 
 controller.getAllServices = function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/services`).then(response => res.send(response.body));
 };
+
+controller.getServiceById = function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    return request.getAsync(`${url}/services/${req.params.id}`).then(response => res.send(response.body));
+}
+
+controller.updateService = function(req, res) {
+
+    log.info(JSON.stringify(req.body));
+
+    res.setHeader('Content-Type', 'application/json');
+    let options = {
+        url: `${url}/services/${req.params.id}/update?version=${req.query.version}`,
+        json: true,
+        body: req.body
+    }
+
+    return request.postAsync(options).then(response => {
+        if(response.statusCode != 200) {
+            log.error(response.body);
+        }
+        res.send(response.body);
+    })
+}
+
 
 controller.getAllTasks = function(req, res) {
     res.setHeader('Content-Type', 'application/json');

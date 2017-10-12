@@ -7,21 +7,21 @@ import {
     TableRow,
     TableRowColumn,
 } from 'material-ui/Table';
-import config from './../config/config';
 import './index.css';
 import EditServiceMenu from './components/EditServiceMenu';
 import os from 'os';
+import Service from './models/service';
 
 export default class Services extends Component {
 
     render() {
-
-        let listOfServices = [];
-        if (this.props.serviceData) {
-            listOfServices = this.props.serviceData;
-        }
-
         let key = 0;
+        let allServices = [];
+        if (this.props.serviceData) {
+            this.props.serviceData.map(s => {
+                return allServices.push(new Service(s));
+            })
+        }
 
         return (
             <div className="Container">
@@ -39,16 +39,15 @@ export default class Services extends Component {
                     </TableHeader>
                     <TableBody>
                         {
-                            // for each service
-                            listOfServices.map(svc => {
-                                return <TableRow key={svc.ID}>
-                                    <TableRowColumn>{svc.ID}</TableRowColumn>
-                                    <TableRowColumn>{svc.Spec.Name}</TableRowColumn>
-                                    <TableRowColumn>{svc.Spec.Mode.Replicated.Replicas}</TableRowColumn>
-                                    <TableRowColumn>{svc.Spec.TaskTemplate.ContainerSpec.Image.split('@')[0]}</TableRowColumn>
+                            allServices.map(service => {
+                                return <TableRow key={service.id}>
+                                    <TableRowColumn>{service.id}</TableRowColumn>
+                                    <TableRowColumn>{service.name}</TableRowColumn>
+                                    <TableRowColumn>{service.scale}</TableRowColumn>
+                                    <TableRowColumn>{service.image}</TableRowColumn>
                                     <TableRowColumn>
                                         {
-                                            svc.Endpoint.Spec.Ports.map(p => {
+                                            service.ports.map(p => {
                                                 key++;
                                                 return <a
                                                   key={key}
@@ -60,7 +59,9 @@ export default class Services extends Component {
                                             })
                                         }
                                     </TableRowColumn>
-                                    <TableRowColumn><EditServiceMenu serviceObject={svc} /></TableRowColumn>
+                                    <TableRowColumn>
+                                        <EditServiceMenu target={service} />
+                                    </TableRowColumn>
                                 </TableRow>
                             })
                         }

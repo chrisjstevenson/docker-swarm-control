@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import Services from './index';
-import { getServiceData, getNodeData } from '../util/stub';
+import { getServiceData, getNodeData, getServiceWithNoEndpointConfig } from '../util/stub';
 
 describe('List Services', function () {
 
@@ -21,4 +21,12 @@ describe('List Services', function () {
         expect(component.contains(item)).equal(true);
         expect(component.instance().props.serviceData.length).equal(2);
     });
+
+    it('lists services when they have no endpoint', () => {
+        const component = shallow(<Services serviceData={getServiceWithNoEndpointConfig()} nodeData={getNodeData()} />);
+        const item = <div>Services</div>;
+
+        expect(component.contains(item)).equal(true);
+        expect(component.instance().props.serviceData.length).equal(2);
+    })
 });
