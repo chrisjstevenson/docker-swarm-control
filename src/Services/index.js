@@ -14,15 +14,32 @@ import Service from './models/service';
 
 export default class Services extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            model: []
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.serviceData) {
+            
+            console.log(this.props);
+
+            let model = []
+            this.props.serviceData.forEach(function(item) {
+                model.push(new Service(item));
+                console.log("added " + item);
+            })
+
+            console.log(model);
+
+            this.setState({model})
+        }
+    }
+
     render() {
         let key = 0;
-        let allServices = [];
-        if (this.props.serviceData) {
-            this.props.serviceData.map(s => {
-                return allServices.push(new Service(s));
-            })
-        }
-
         return (
             <div className="Container">
                 <div>Services</div>
@@ -39,7 +56,7 @@ export default class Services extends Component {
                     </TableHeader>
                     <TableBody>
                         {
-                            allServices.map(service => {
+                            this.state.model.map(service => {
                                 return <TableRow key={service.id}>
                                     <TableRowColumn>{service.id}</TableRowColumn>
                                     <TableRowColumn>{service.name}</TableRowColumn>
