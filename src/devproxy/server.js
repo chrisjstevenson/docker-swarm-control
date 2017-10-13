@@ -11,6 +11,11 @@ const port = 3001;
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+    res.setHeader('Content-Type', 'application/json');
+    next();
+});
+
 
 require('./routes')(app);
 

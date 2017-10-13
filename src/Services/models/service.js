@@ -12,7 +12,7 @@ export default class Service {
         this.scale = base.Spec.Mode.Replicated.Replicas;
         this.image = base.Spec.TaskTemplate.ContainerSpec.Image.split('@')[0]
         
-        // initialize ports from spec
+        // Initialize ports from spec.
         this.ports = [];
         if (this.endpoint.Ports) {
             this.ports = base.Spec.Endpoint.Spec.Ports;
@@ -20,13 +20,14 @@ export default class Service {
     }
     
     updateScale(newScale) {
+        // Set required data elements.
         let updatedServiceDescription = {
             Spec: this.spec,
             Endpoint: this.endpoint
         }
 
-        // Set update. Need to parse to integer for Docker API to accept this update
-        updatedServiceDescription.Spec.Mode.Replicated.Replicas = parseInt(newScale);
+        // Set update. Parse replicas to integer for Docker API to accept this update.
+        updatedServiceDescription.Spec.Mode.Replicated.Replicas = parseInt(newScale, 10);
 
         // Call api to do the update
         updateService(this.id, updatedServiceDescription)

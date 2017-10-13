@@ -36,7 +36,7 @@ export default class Main extends Component {
                 <Switch>
                     <Route exact path='/' render={()=><Swarm swarmData={this.state.swarm}/>}/>
                     <Route path='/nodes' render={()=><Nodes nodeData={this.state.nodes}/>}/>
-                    <Route path='/services' render={()=><Services serviceData={this.state.services} nodeData={this.state.nodes}/>}/>
+                    <Route path='/services' render={()=><Services />}/>
                     <Route path='/tasks' component={Tasks}/>
                     <Route path='/networks' component={Networks}/>
                 </Switch>

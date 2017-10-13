@@ -11,31 +11,44 @@ import './index.css';
 import EditServiceMenu from './components/EditServiceMenu';
 import os from 'os';
 import Service from './models/service';
+import { refreshServices } from '../util/swarm-api';
 
 export default class Services extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
             model: []
         }
+        
+        // Need to bind so this is available via event handler
+        // https://stackoverflow.com/questions/39705002/react-this2-setstate-is-not-a-function 
+        this.fetchDataAndPoll = this.fetchDataAndPoll.bind(this);
     }
 
     componentDidMount() {
-        if (this.props.serviceData) {
-            
-            console.log(this.props);
+        this.fetchData();
+    }
 
-            let model = []
-            this.props.serviceData.forEach(function(item) {
-                model.push(new Service(item));
-                console.log("added " + item);
+    fetchDataAndPoll() {
+        setTimeout(() => {
+            this.fetchData()
+            //this.refreshAndPoll(); ** uncomment to poll
+        }, 3000);
+    }
+
+    fetchData() {
+
+        // fetch services
+        refreshServices()
+            .then(data => {
+                return Promise.map(data, (seed) => {
+                    return new Service(seed);
+                })
             })
-
-            console.log(model);
-
-            this.setState({model})
-        }
+            .then(model => {
+                console.log(`refesh state: ${JSON.stringify(model)}`);
+                this.setState({model});
+            });
     }
 
     render() {
@@ -77,7 +90,7 @@ export default class Services extends Component {
                                         }
                                     </TableRowColumn>
                                     <TableRowColumn>
-                                        <EditServiceMenu target={service} />
+                                        <EditServiceMenu target={service} onRefresh={this.fetchDataAndPoll} />
                                     </TableRowColumn>
                                 </TableRow>
                             })

@@ -50,8 +50,15 @@ export default class EditServiceMenu extends React.Component {
         });
     };
 
+    // handle dialog submit  ** currently for scale only **
     handleSubmit = () => {
+        // Invoke updateScale on this Service.
         this.props.target.updateScale(this.state.scale);
+        
+        // Invoke refresh on parent component.
+        this.props.onRefresh();
+
+        // Set state, close dialog.
         this.setState({
             open: false,
             editorOpen: false

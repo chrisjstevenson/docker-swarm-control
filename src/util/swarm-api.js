@@ -1,7 +1,7 @@
 import axios from 'axios';
 import assert from 'assert';
 
-export {getSwarmData, getServiceData, getNode, updateService};
+export {getSwarmData, getServiceData, getNode, updateService, refreshServices};
 
 function getSwarmData() {
     return axios.all([
@@ -16,7 +16,6 @@ function getSwarmData() {
     }));
 }
 
-//
 function getServiceData() {
     return axios.all([
         axios.get(`/services`),
@@ -34,6 +33,10 @@ function getNode(id) {
     return axios.get(`/nodes/${id}`).then(res => res.data);
 }
 
+// "Refresh", to be called by individual components
+function refreshServices() {
+    return axios.get(`/services`).then(res => res.data);
+}
 
 function updateService(id, updatedServiceDescription) {
     return axios.get(`/services/${id}`)

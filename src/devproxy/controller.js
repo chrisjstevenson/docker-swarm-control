@@ -21,40 +21,31 @@ if (!process.env.DOCKER_HOST) {
 }
 
 controller.getVersion = function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/version`).then(response => res.send(response.body));
 };
 
 controller.getSwarm = function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/swarm`).then(response => res.send(response.body));
 };
 
 controller.getAllNodes = function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/nodes`).then(response => res.send(response.body));
 };
 
 controller.getNodeById = function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/nodes/${req.params.id}`).then(response => res.send(response.body));
 };
 
 controller.getAllServices = function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/services`).then(response => res.send(response.body));
 };
 
 controller.getServiceById = function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/services/${req.params.id}`).then(response => res.send(response.body));
 }
 
 controller.updateService = function(req, res) {
-
-    log.info(JSON.stringify(req.body));
-
-    res.setHeader('Content-Type', 'application/json');
+    log.info(`Request Body: ${JSON.stringify(req.body)}`);
     let options = {
         url: `${url}/services/${req.params.id}/update?version=${req.query.version}`,
         json: true,
@@ -69,14 +60,10 @@ controller.updateService = function(req, res) {
     })
 }
 
-
 controller.getAllTasks = function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    //return request.getAsync(`${url}/tasks`).then(response => res.send(response.body));
     return request.getAsync(`${url}/tasks`).then(response => res.send(response.body));
 };
 
 controller.getNetworks = function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
     return request.getAsync(`${url}/networks`).then(response => res.send(response.body));
 };
