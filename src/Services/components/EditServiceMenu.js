@@ -58,6 +58,14 @@ export default class EditServiceMenu extends React.Component {
         // Invoke refresh on parent component.
         this.props.onRefresh();
 
+        let update = {
+            name: this.props.target.name,
+            scale: this.state.scale,
+        }
+
+        // Invoke notification on parent component.
+        this.props.onNotify(update);
+
         // Set state, close dialog.
         this.setState({
             open: false,

@@ -7,16 +7,21 @@ import {
     TableRow,
     TableRowColumn,
 } from 'material-ui/Table';
-import './index.css';
+import Snackbar from 'material-ui/Snackbar';
 import EditServiceMenu from './components/EditServiceMenu';
-import os from 'os';
+import './index.css';
 import Service from './models/service';
+import os from 'os';
 import { refreshServices } from '../util/swarm-api';
 
 export default class Services extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            notify: false,
+            update: {
+                name: null,
+            },
             model: []
         }
         
@@ -37,7 +42,6 @@ export default class Services extends Component {
     }
 
     fetchData() {
-
         // fetch services
         refreshServices()
             .then(data => {
@@ -50,6 +54,14 @@ export default class Services extends Component {
                 this.setState({model});
             });
     }
+
+    notify = (update) => {
+        this.setState({
+            notify: true,
+            update: update
+        })
+    }
+
 
     render() {
         let key = 0;
@@ -90,13 +102,23 @@ export default class Services extends Component {
                                         }
                                     </TableRowColumn>
                                     <TableRowColumn>
-                                        <EditServiceMenu target={service} onRefresh={this.fetchDataAndPoll} />
+                                        <EditServiceMenu 
+                                            target={service} 
+                                            onRefresh={this.fetchDataAndPoll} 
+                                            onNotify={this.notify} />
                                     </TableRowColumn>
                                 </TableRow>
                             })
                         }
                     </TableBody>
                 </Table>
+
+                <Snackbar
+                    open={this.state.notify}
+                    message={`Updating ${this.state.update.name} service...`}
+                    autoHideDuration={4000}
+                   // onRequestClose={this.handleNotificationRequestClose}
+                />
             </div>
         );
     };
