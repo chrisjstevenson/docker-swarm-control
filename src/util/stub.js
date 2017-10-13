@@ -1,4 +1,7 @@
-export {getSwarmData, getNodeData, getServiceData, getTasksData, getServiceWithNoEndpointConfig};
+import bluebird from 'bluebird';
+global.Promise = bluebird;
+
+export {getSwarmData, getNodeData, mockServiceData, getTasksData, getServiceWithNoEndpointConfig};
 
 function getSwarmData() {
     return {
@@ -283,7 +286,7 @@ function getNodeData() {
     ];
 }
 
-function getServiceData() {
+function mockServiceData() {
     return [
         {
             "ID": "jye5l21kxduceg9458j8qmko6",

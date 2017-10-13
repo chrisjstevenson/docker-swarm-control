@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './index.css';
 import {
     Table,
     TableBody,
@@ -9,10 +10,9 @@ import {
 } from 'material-ui/Table';
 import Snackbar from 'material-ui/Snackbar';
 import EditServiceMenu from './components/EditServiceMenu';
-import './index.css';
 import Service from './models/service';
 import os from 'os';
-import { refreshServices } from '../util/swarm-api';
+import axios from 'axios';
 
 export default class Services extends Component {
     constructor(props) {
@@ -24,28 +24,25 @@ export default class Services extends Component {
             },
             model: []
         }
-        
-        // Need to bind so this is available via event handler
-        // https://stackoverflow.com/questions/39705002/react-this2-setstate-is-not-a-function 
-        this.fetchDataAndPoll = this.fetchDataAndPoll.bind(this);
     }
 
     componentDidMount() {
-        this.fetchData();
+        // Initial fetch.
+        this.fetchServices();
     }
 
-    fetchDataAndPoll() {
+    fetchServicesAndPoll = () => {
+        // Fetch and then poll to get update.
         setTimeout(() => {
-            this.fetchData()
-            //this.refreshAndPoll(); ** uncomment to poll
+            this.fetchServices()
+            //this.refreshAndPoll(); ** uncomment to poll continuously
         }, 3000);
     }
 
-    fetchData() {
-        // fetch services
-        refreshServices()
-            .then(data => {
-                return Promise.map(data, (seed) => {
+    fetchServices() {
+        axios.get(`/services`)
+            .then(res => {
+                return Promise.map(res.data, (seed) => {
                     return new Service(seed);
                 })
             })
@@ -104,7 +101,7 @@ export default class Services extends Component {
                                     <TableRowColumn>
                                         <EditServiceMenu 
                                             target={service} 
-                                            onRefresh={this.fetchDataAndPoll} 
+                                            onRefresh={this.fetchServicesAndPoll} 
                                             onNotify={this.notify} />
                                     </TableRowColumn>
                                 </TableRow>
