@@ -27,6 +27,6 @@ describe('List Services', function () {
         const item = <div>Services</div>;
 
         expect(component.contains(item)).equal(true);
-        expect(component.instance().props.serviceData.length).equal(2);
+        expect(component.instance().props.serviceData.length).equal(1);
     })
 });
