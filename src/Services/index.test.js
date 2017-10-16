@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import Services from './index';
-import Service from './models/Service';
+import Service from './models/service';
 
 describe('List Services', function () {
 
