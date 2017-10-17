@@ -5,12 +5,12 @@ import Popover, {PopoverAnimationVertical} from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import EditServiceFields from './EditServiceFields';
+import LabelEditor from './LabelEditor';
 
 export default class EditServiceMenu extends React.Component {
 
     //Props:
     //  target (the service description we want to modify)
-
 
     constructor(props) {
         super(props);
@@ -18,12 +18,11 @@ export default class EditServiceMenu extends React.Component {
         this.state = {
             open: false,
             editorOpen: false,
-            labels: this.props.labels,
-            scale: this.props.scale,
+            update: {}
         };
     }
 
-    // open edit menu
+    // Opens the edit menu.
     handleTouchTap = (event) => {
         // This prevents ghost click.
         event.preventDefault();
@@ -42,6 +41,20 @@ export default class EditServiceMenu extends React.Component {
         })
     };
 
+    // select menu item
+    handleMenuTouchTap = (event, value) => {        
+        switch(value.props.primaryText) {
+            case "Settings":
+                this.setState({
+                    open: false,
+                    editorOpen: true
+                });
+                break;
+            default:
+                return;
+        }
+    };
+
     // close dialog
     handleClose = () => {
         this.setState({
@@ -58,13 +71,13 @@ export default class EditServiceMenu extends React.Component {
         // Invoke refresh on parent component.
         this.props.onRefresh();
 
-        let update = {
+        let updateNotification = {
             name: this.props.target.name,
             scale: this.state.scale,
         }
 
         // Invoke notification on parent component.
-        this.props.onNotify(update);
+        this.props.onNotify(updateNotification);
 
         // Set state, close dialog.
         this.setState({
@@ -73,28 +86,21 @@ export default class EditServiceMenu extends React.Component {
         });
     }
 
-    // select menu item
-    handleMenuTouchTap = (event, value) => {
+    handleAddLabelSubmit = (label) => {
+        console.log("adding label" + JSON.stringify(label));
+        // this.setState({
+        //     update: {
+        //         labels: label
+        //     }
+        // })
 
-        switch(value.props.primaryText) {
-            case "Settings":
-                this.setState({
-                    open: false,
-                    editorOpen: true
-                });
-                break;
-            default:
-                return;
-        }
-    };
+        // console.log((JSON.stringify(this.state.update)))
+    }
 
+    // Handles field changes from EditServiceFields component.
+    //   Currently only modifying the scale is supported. 
     handleFieldChange = (field, value) => {
         switch(field) {
-            case "labelsField":
-                this.setState({
-                    labels: value
-                });
-                break; 
             case "scaleField":
                 this.setState({
                     scale: value
@@ -148,7 +154,16 @@ export default class EditServiceMenu extends React.Component {
                     modal={false}
                     open={this.state.editorOpen}
                     onRequestClose={this.handleClose}>
-                    <EditServiceFields target={this.props.target} onChange={this.handleFieldChange} />
+                    
+                    <EditServiceFields 
+                        target={this.props.target} 
+                        onChange={this.handleFieldChange} 
+                    />
+
+                    <LabelEditor 
+                        labels={this.props.target.labels} 
+                        onSubmit={this.handleAddLabelSubmit} 
+                    />
                 </Dialog>
 
             </div>

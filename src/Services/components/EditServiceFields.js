@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 
 export default class EditServiceFields extends Component {
@@ -10,27 +11,32 @@ export default class EditServiceFields extends Component {
     render() {
         return (
             <div>
-                {/* <TextField
+                <TextField
                     name="nameField"
                     defaultValue={this.props.target.name}
                     floatingLabelText="Name"
-                /> */}
-                <br />
-                <TextField
-                    name="labelsField"
-                    defaultValue={JSON.stringify(this.props.target.labels)}
-                    floatingLabelText="Label"
-                    onChange={this.handleChange}
+                    disabled={true}
                 />
+                 
                 <br />
-
                 <TextField
                     name="scaleField"
                     defaultValue={this.props.target.scale}
                     floatingLabelText="Scale"
                     onChange={this.handleChange}
                 />
+
+                <br /> 
             </div>
         );
+    }
+}
+
+// testing out validation using prop types. 
+EditServiceFields.defaultProps = {
+    target: {
+        name: "",
+        labels: "",
+        scale: 0
     }
 }
