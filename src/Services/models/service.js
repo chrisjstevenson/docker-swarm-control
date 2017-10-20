@@ -3,20 +3,24 @@ import {updateService} from '../../util/swarm-api';
 export default class Service {
 
     constructor(base) {
-        this.spec = base.Spec;
-        this.endpoint = base.Endpoint;
-        this.id = base.ID;
-        this.version = base.Version;
-        this.name = base.Spec.Name;
-        this.labels = base.Spec.Labels;
-        this.scale = base.Spec.Mode.Replicated.Replicas;
-        this.image = base.Spec.TaskTemplate.ContainerSpec.Image.split('@')[0]
-        
-        // Initialize ports from spec.
-        this.ports = [];
-        if (this.endpoint.Ports) {
-            this.ports = base.Spec.Endpoint.Spec.Ports;
+        this.metadata = {
+          id: base.ID,
+          version: base.Version,
+          specification: base.Spec
         }
+        this.display = {
+          name: base.Spec.Name,
+          labels: base.Spec.Labels,
+          scale: base.Spec.Mode.Replicated.Replicas,
+          image: base.Spec.TaskTemplate.ContainerSpec.Image.split('@')[0],
+          ports: []
+        }
+
+        if (base.Spec.EndpointSpec && base.Spec.EndpointSpec.Ports) {
+          this.display.ports = base.Spec.EndpointSpec.Ports
+        }
+
+        console.log(this);
     }
     
     updateScale(newScale) {
@@ -33,3 +37,52 @@ export default class Service {
         updateService(this.id, updatedServiceDescription)
     }
 }
+
+
+/*
+
+{
+  "Name": "pineapple",
+  "Labels": {
+    "crude": "word"
+  },
+  "TaskTemplate": {
+    "ContainerSpec": {
+      "Image": "chrisjstevenson/pineapple:latest@sha256:76625e913f2c5d4bc6f2ae2bfb88be467d8a1b69fde1f272322141dbc51e503a",
+      "DNSConfig": {}
+    },
+    "Resources": {
+      "Limits": {},
+      "Reservations": {}
+    },
+    "Placement": {
+      "Platforms": [
+        {
+          "Architecture": "amd64",
+          "OS": "linux"
+        }
+      ]
+    },
+    "ForceUpdate": 0,
+    "Runtime": "container"
+  },
+  "Mode": {
+    "Replicated": {
+      "Replicas": 4
+    }
+  },
+  "EndpointSpec": {
+    "Mode": "vip",
+    "Ports": [
+      {
+        "Protocol": "tcp",
+        "TargetPort": 8080,
+        "PublishedPort": 8080,
+        "PublishMode": "ingress"
+      }
+    ]
+  }
+}
+
+
+*/

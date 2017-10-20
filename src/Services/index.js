@@ -9,7 +9,8 @@ import {
     TableRowColumn,
 } from 'material-ui/Table';
 import Snackbar from 'material-ui/Snackbar';
-import EditServiceMenu from './components/EditServiceMenu';
+import EditMenu from './components/EditMenu';
+import EditServiceDialog from './components/EditServiceDialog';
 import Service from './models/service';
 import os from 'os';
 import axios from 'axios';
@@ -18,6 +19,7 @@ export default class Services extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            editorOpen: false,
             notify: false,
             update: {
                 name: null,
@@ -52,13 +54,24 @@ export default class Services extends Component {
             });
     }
 
+    openServiceEditor = (event) => {
+        this.setState({
+            editorOpen: true
+        })
+    }
+
+    closeServiceEditor = () => {
+        this.setState({
+            editorOpen: false
+        })
+    }
+
     notify = (update) => {
         this.setState({
             notify: true,
             update: update
         })
     }
-
 
     render() {
         let key = 0;
@@ -79,14 +92,15 @@ export default class Services extends Component {
                     <TableBody>
                         {
                             this.state.model.map(service => {
-                                return <TableRow key={service.id}>
-                                    <TableRowColumn>{service.id}</TableRowColumn>
-                                    <TableRowColumn>{service.name}</TableRowColumn>
-                                    <TableRowColumn>{service.scale}</TableRowColumn>
-                                    <TableRowColumn>{service.image}</TableRowColumn>
+                                return <TableRow key={service.metadata.id}>
+                                    <TableRowColumn>{service.metadata.id}</TableRowColumn>
+                                    <TableRowColumn>{service.display.name}</TableRowColumn>
+                                    <TableRowColumn>{service.display.scale}</TableRowColumn>
+                                    <TableRowColumn>{service.display.image}</TableRowColumn>
                                     <TableRowColumn>
+                                       
                                         {
-                                            service.ports.map(p => {
+                                            service.display.ports.map(p => {
                                                 key++;
                                                 return <a
                                                   key={key}
@@ -97,12 +111,20 @@ export default class Services extends Component {
                                                 </a>
                                             })
                                         }
+
                                     </TableRowColumn>
                                     <TableRowColumn>
-                                        <EditServiceMenu 
-                                            target={service} 
+                                        
+                                        <EditMenu onOpenSettings={this.openServiceEditor} />   
+
+                                        <EditServiceDialog 
+                                            editorOpen={this.state.editorOpen}
+                                            onClose={this.closeServiceEditor}
+                                            serviceIdentifier={service.metadata.id} 
                                             onRefresh={this.fetchServicesAndPoll} 
-                                            onNotify={this.notify} />
+                                            onNotify={this.notify} 
+                                        />
+
                                     </TableRowColumn>
                                 </TableRow>
                             })

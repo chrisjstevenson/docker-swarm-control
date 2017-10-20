@@ -11,9 +11,23 @@ describe('List Services', function () {
     });
 
     it('renders table of services.', () => {
+        const mock = [
+            {
+                metadata: {
+                    id: "111111",
+                },
+                display: {
+                    name: "service1",
+                    scale: 4,
+                    image: "image1",
+                    ports: []
+                }
+            }
+        ]
+
         const wrapper = shallow(<Services />);
         wrapper.setState({
-            model: mockServiceData
+            model: mock
         })
         //console.log(wrapper.debug());
         expect(wrapper.find('TableRow')).to.have.length(2); // ** header and first row
@@ -33,57 +47,3 @@ describe('List Services', function () {
         expect(rendered.props()).to.have.property('message', 'Updating BananaBanana service...');
     })
 });
-
-
-
-
-
-const mockServiceData = [
-    {
-        "spec": {
-        "Name": "pineapple",
-        "Labels": {
-            "crude": "word"
-        },
-        "TaskTemplate": {
-            "ContainerSpec": {
-            "Image": "chrisjstevenson/pineapple:latest@sha256:76625e913f2c5d4bc6f2ae2bfb88be467d8a1b69fde1f272322141dbc51e503a",
-            "DNSConfig": {}
-            },
-            "Resources": {
-            "Limits": {},
-            "Reservations": {}
-            },
-            "Placement": {
-            "Platforms": [
-                {
-                "Architecture": "amd64",
-                "OS": "linux"
-                }
-            ]
-            },
-            "ForceUpdate": 0,
-            "Runtime": "container"
-        },
-        "Mode": {
-            "Replicated": {
-            "Replicas": 3
-            }
-        }
-        },
-        "endpoint": {
-        "Spec": {}
-        },
-        "id": "ubfzvn0nahswtjrtbd77eu8r4",
-        "version": {
-        "Index": 402
-        },
-        "name": "pineapple",
-        "labels": {
-        "crude": "word"
-        },
-        "scale": 3,
-        "image": "chrisjstevenson/pineapple:latest",
-        "ports": []
-    }
-]
