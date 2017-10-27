@@ -10,6 +10,7 @@
     "enzyme": "^2.9.1",
     "express": "^4.15.3",
     "express-winston": "^2.4.0",
+    "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
     "material-ui": "^0.18.3",
     "moment": "^2.18.1",

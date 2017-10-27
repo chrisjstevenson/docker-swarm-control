@@ -8,3 +8,11 @@
     margin-left: 60px;
     margin-right: 60px;
 }
+
+.Join-Command {
+    font-family: monospace
+}
+
+.Alert {
+    padding-left:2em 
+}
