@@ -1,14 +1,13 @@
-import {updateService} from '../../util/swarm-api';
-
 export default class Service {
 
     constructor(base) {
         this.metadata = {
           id: base.ID,
-          version: base.Version,
-          specification: base.Spec
+          version: parseInt(base.Version.Index, 10),
+          spec: base.Spec
         }
-        this.display = {
+
+        this.properties = {
           name: base.Spec.Name,
           labels: base.Spec.Labels,
           scale: base.Spec.Mode.Replicated.Replicas,
@@ -17,25 +16,14 @@ export default class Service {
         }
 
         if (base.Spec.EndpointSpec && base.Spec.EndpointSpec.Ports) {
-          this.display.ports = base.Spec.EndpointSpec.Ports
+          this.properties.ports = base.Spec.EndpointSpec.Ports.map(spec => {
+            return { 
+              published: spec.PublishedPort, 
+              target: spec.TargetPort
+            }
+          });
         }
-
-        console.log(this);
-    }
-    
-    updateScale(newScale) {
-        // Set required data elements.
-        let updatedServiceDescription = {
-            Spec: this.spec,
-            Endpoint: this.endpoint
-        }
-
-        // Set update. Parse replicas to integer for Docker API to accept this update.
-        updatedServiceDescription.Spec.Mode.Replicated.Replicas = parseInt(newScale, 10);
-
-        // Call api to do the update
-        updateService(this.id, updatedServiceDescription)
-    }
+      }
 }
 
 

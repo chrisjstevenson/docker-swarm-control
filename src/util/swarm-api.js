@@ -38,7 +38,9 @@ function refreshServices() {
     return axios.get(`/services`).then(res => res.data);
 }
 
-function updateService(id, updatedServiceDescription) {
+function updateService(id, updatedSpec) {
+
+
     return axios.get(`/services/${id}`)
         .then(res => {
             assert.equal(res.status, 200);
@@ -46,10 +48,11 @@ function updateService(id, updatedServiceDescription) {
         })
         .then(updatedServiceData => {
             
-            updatedServiceData.Spec = updatedServiceDescription.Spec;
-            updatedServiceData.Endpoint = updatedServiceDescription.Endpoint;
+            // updatedServiceData.Spec = updatedServiceDescription.Spec;
+            // updatedServiceData.Endpoint = updatedServiceDescription.Endpoint;
 
-            return axios.post(`/services/${updatedServiceData.ID}/update?version=${updatedServiceData.Version.Index}`, updatedServiceData.Spec);
+            //return axios.post(`/services/${updatedServiceData.ID}/update?version=${updatedServiceData.Version.Index}`, updatedServiceData.Spec);
+            return axios.post(`/services/${id}/update?version=${updatedServiceData.Version.Index}`, updatedServiceData.Spec);
         })
         .then(res => {
             assert.equal(res.status, 200);  // no body when 200ok

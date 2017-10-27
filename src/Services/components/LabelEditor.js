@@ -3,6 +3,11 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 
+const customContentStyle = {
+    width: '100%',
+    maxWidth: 'none',
+  };
+
 export default class LabelEditor extends Component {
 
     constructor(props) {
@@ -53,24 +58,24 @@ export default class LabelEditor extends Component {
         });
     };
     
-    renderLabelFields() {
-        let labels = this.props.labels
-        function createLabel(index, labelName, labelValue ) {
-            return (
-                <div key={index}>
-                    <TextField 
-                        name={`labelNameField_${index}`}
-                        defaultValue={labelValue} 
-                        floatingLabelText={labelName}
-                    />
-                </div>
-            );
-        };
+    // renderLabelFields() {
+    //     let labels = this.props.labels
+    //     function createLabel(index, labelName, labelValue ) {
+    //         return (
+    //             <div key={index}>
+    //                 <TextField 
+    //                     name={`labelNameField_${index}`}
+    //                     defaultValue={labelValue} 
+    //                     floatingLabelText={labelName}
+    //                 />
+    //             </div>
+    //         );
+    //     };
 
-        return Object.keys(labels).map(function(key, index) {
-            return createLabel(index, key, labels[key])
-         });
-    }
+    //     return Object.keys(labels).map(function(key, index) {
+    //         return createLabel(index, key, labels[key])
+    //      });
+    // }
 
 
     render() {
@@ -91,30 +96,29 @@ export default class LabelEditor extends Component {
 
         return (
             <div>
-                {this.renderLabelFields()}
+                {/* {this.renderLabelFields()} */}
                 <FlatButton
-                    label="ADD LABEL"
+                    label="Edit Specification"
                     primary={true}
                     onClick={this.openEditor}
                 />
 
                 <Dialog
-                    title={`Add Label`}
                     actions={actions}
                     modal={false}
                     open={this.state.editorOpen}
+                    autoScrollBodyContent={true}
                     onRequestClose={this.closeEditor} >
 
                     <TextField 
-                        name="labelNameField"  
-                        floatingLabelText="Name" 
-                        onChange={this.handleLabelNameChange}
+                        name="editField"  
+                        floatingLabelText="Specification" 
+                        multiLine={true}
+                        rowsMax={20}
+                        fullWidth={true}
+                        defaultValue={JSON.stringify(this.props.specification, null, 2)}
                     />
-                    <TextField 
-                        name="labelValueField"  
-                        floatingLabelText="Value" 
-                        onChange={this.handleLabelValueChange}
-                    />
+
                 </Dialog>   
             </div>
         );

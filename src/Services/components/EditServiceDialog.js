@@ -2,9 +2,12 @@ import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import EditServiceFields from './EditServiceFields';
-//import LabelEditor from './LabelEditor';
+// import LabelEditor from './LabelEditor';
 import Service from '../models/service';
+// import TextField from 'material-ui/TextField';
+import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
+import assert from 'assert';
 
 export default class EditServiceDialog extends React.Component {
 
@@ -12,16 +15,20 @@ export default class EditServiceDialog extends React.Component {
         super(props);
 
         this.state = {
-            model: {}
+            notify: false,
+            update: {
+                name: ""
+            }
         };
+
+        
     }
 
     componentDidMount() {
-        // Initial fetch.
-        this.fetchService();
+        this.fetchModel();
     }
 
-    fetchService() {
+    fetchModel() {
         axios.get(`/services/${this.props.serviceIdentifier}`)
             .then(res => {
                 return new Service(res.data);
@@ -32,47 +39,99 @@ export default class EditServiceDialog extends React.Component {
             });
     }
 
+    updateModel() {
+        
+        let model = {...this.state.model}
+
+        // Update the inner specification.
+        model.metadata.spec.Labels = model.properties.labels;
+        model.metadata.spec.Mode.Replicated.Replicas = parseInt(model.properties.scale, 10);
+        model.metadata.spec.EndpointSpec.Ports = model.properties.ports.map(port => {
+            return this.updatePorts(port);
+        })
+
+        console.log(`updating to new state: ${JSON.stringify(model)}`);
+
+        // Get currenet state and then post the update back to the docker daemon. 
+        return axios.get(`/services/${model.metadata.id}`)
+            .then(res => {
+                assert.equal(res.status, 200);
+                return res.data;
+            })
+            .then(existingServiceInstance => {
+                return axios.post(`/services/${model.metadata.id}/update?version=${existingServiceInstance.Version.Index}`, model.metadata.spec)
+            })
+            .then(res => {
+                assert.equal(res.status, 200);  // no body when 200ok
+            })
+            .catch(err => {
+                console.error(err.message)
+            });
+    }
+        
+    // Helper function for managing port configuration.
+    updatePorts(portConfig) {
+        return {
+            Protocol: "tcp",
+            TargetPort: parseInt(portConfig.target, 10),
+            PublishedPort: parseInt(portConfig.published, 10),
+            PublishMode: "ingress"
+        }
+    }
+
     // Close the editor, sets editorOpen to false in parent state.
     handleClose = () => {
         this.props.onClose();
     };
 
-    // handle dialog submit  ** currently for scale only **
+    handleSnackbarOnRequestClose = () => {
+        this.setState({
+            notify: false
+        })
+    }
+
+    // handle dialog submit
     handleSubmit = () => {
-        // Invoke updateScale on this Service.
-        this.state.model.updateScale(this.state.scale);
+
+        // Invoke update on the model
+        this.updateModel();
         
         // Invoke refresh on parent component.
         this.props.onRefresh();
 
         let updateNotification = {
-            name: this.state.model.name,
-            scale: this.state.scale,
+            name: this.state.model.properties.name,
         }
 
-        // Invoke notification on parent component.
-        this.props.onNotify(updateNotification);
+        // Show notification on this component
+        this.handleNotify(updateNotification);
         
         // Close dialog by setting editorOpen to false in parent state. 
         this.props.onClose();
     }
 
-    handleAddLabelSubmit = (label) => {
-        console.log("adding label" + JSON.stringify(label));
-        let model = {...this.state.model}
-        model.lables = label;
-        this.setState({model});
+    handleNotify = (update) => {
+        this.setState({
+            notify: true,
+            update: update
+        })
     }
 
-    // Handles field changes from EditServiceFields component.
-    //   Currently only modifying the scale is supported. 
     handleFieldChange = (field, value) => {
+        
+        let model = {...this.state.model}
+
         switch(field) {
-            case "scaleField":
-                this.setState({
-                    scale: value
-                });
-                break;               
+            case "scaleField":                
+                model.properties.scale = value;
+                this.setState({model});
+                break;
+            case "portsField":
+                model.properties.ports.forEach(e => {
+                    e.published = value;
+                })
+                this.setState({model});
+                break;
             default:
                 return;
         }
@@ -106,13 +165,14 @@ export default class EditServiceDialog extends React.Component {
                         target={this.state.model} 
                         onChange={this.handleFieldChange} 
                     />
-
-                    {/* <LabelEditor 
-                        labels={this.state.model.labels} 
-                        onSubmit={this.handleAddLabelSubmit} 
-                    /> */}
-
                 </Dialog>
+
+                <Snackbar
+                    open={this.state.notify}
+                    message={`Updating ${this.state.update.name} service...`}
+                    autoHideDuration={4000}
+                    onRequestClose={this.handleSnackbarOnRequestClose}
+                />
             </div>
         );
     }

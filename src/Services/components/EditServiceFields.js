@@ -13,7 +13,7 @@ export default class EditServiceFields extends Component {
             <div>
                 <TextField
                     name="nameField"
-                    defaultValue={this.props.target.display.name}
+                    defaultValue={this.props.target.properties.name}
                     floatingLabelText="Name"
                     disabled={true}
                 />
@@ -21,22 +21,36 @@ export default class EditServiceFields extends Component {
                 <br />
                 <TextField
                     name="scaleField"
-                    defaultValue={this.props.target.display.scale}
+                    defaultValue={this.props.target.properties.scale}
                     floatingLabelText="Number of Replicas"
                     onChange={this.handleChange}
                 /> 
+                <br />
+                <TextField
+                    name="labelsField"
+                    defaultValue={JSON.stringify(this.props.target.properties.labels, null, 2)}
+                    floatingLabelText="Labels"
+                    onChange={this.handleChange}
+                />
+                <br />
+                <TextField
+                    name="portsField"
+                    defaultValue={this.props.target.properties.ports.map(port => { return port.published })}
+                    floatingLabelText="Ports"
+                    onChange={this.handleChange}
+                />  
             </div>
         );
     }
 }
 
-// testing out validation using prop types. 
 EditServiceFields.defaultProps = {
     target: {
-        display: {
+        properties: {
             name: "",
             labels: "",
-            scale: 0
+            scale: 0,
+            ports: []// ** can't seem to default this
         }
     }
 }

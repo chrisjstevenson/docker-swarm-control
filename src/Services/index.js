@@ -8,7 +8,7 @@ import {
     TableRow,
     TableRowColumn,
 } from 'material-ui/Table';
-import Snackbar from 'material-ui/Snackbar';
+// import Snackbar from 'material-ui/Snackbar';
 import EditMenu from './components/EditMenu';
 import EditServiceDialog from './components/EditServiceDialog';
 import Service from './models/service';
@@ -85,7 +85,7 @@ export default class Services extends Component {
                             <TableHeaderColumn>name</TableHeaderColumn>
                             <TableHeaderColumn>replicas</TableHeaderColumn>
                             <TableHeaderColumn>image</TableHeaderColumn>
-                            <TableHeaderColumn>ports</TableHeaderColumn>
+                            <TableHeaderColumn>published ports</TableHeaderColumn>
                             <TableHeaderColumn />
                         </TableRow>
                     </TableHeader>
@@ -94,20 +94,20 @@ export default class Services extends Component {
                             this.state.model.map(service => {
                                 return <TableRow key={service.metadata.id}>
                                     <TableRowColumn>{service.metadata.id}</TableRowColumn>
-                                    <TableRowColumn>{service.display.name}</TableRowColumn>
-                                    <TableRowColumn>{service.display.scale}</TableRowColumn>
-                                    <TableRowColumn>{service.display.image}</TableRowColumn>
+                                    <TableRowColumn>{service.properties.name}</TableRowColumn>
+                                    <TableRowColumn>{service.properties.scale}</TableRowColumn>
+                                    <TableRowColumn>{service.properties.image}</TableRowColumn>
                                     <TableRowColumn>
                                        
                                         {
-                                            service.display.ports.map(p => {
+                                            service.properties.ports.map(port => {
                                                 key++;
                                                 return <a
                                                   key={key}
                                                   className="Service-link"
-                                                  href={`http://${os.hostname()}:${p.PublishedPort}`}
+                                                  href={`http://${os.hostname()}:${port.published}`}
                                                   target="_blank"
-                                                  rel="noopener noreferrer">{p.PublishedPort}
+                                                  rel="noopener noreferrer">{port.published}
                                                 </a>
                                             })
                                         }
@@ -132,12 +132,12 @@ export default class Services extends Component {
                     </TableBody>
                 </Table>
 
-                <Snackbar
+                {/* <Snackbar
                     open={this.state.notify}
                     message={`Updating ${this.state.update.name} service...`}
                     autoHideDuration={4000}
                    // onRequestClose={this.handleNotificationRequestClose}
-                />
+                /> */}
             </div>
         );
     };

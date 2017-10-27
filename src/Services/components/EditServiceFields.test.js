@@ -6,8 +6,9 @@ import Service from '../models/service';
 
 test('renders without crashing.', () => {
     const mock = {
-        display: {
-            name: 'service1'
+        properties: {
+            name: 'service1',
+            ports: []
         }
     }
 
@@ -21,8 +22,9 @@ test('renders without crashing when passed bad props', () => {
 test('displays name in disabled field', () => {
 
     const mock = {
-        display: {
-            name: 'service1'
+        properties: {
+            name: 'service1',
+            ports: []
         }
     }
 
@@ -45,8 +47,9 @@ test('displays name in disabled field', () => {
 test('displays scale', () => {
 
     const mock = {
-        display: {
-            scale: 3
+        properties: {
+            scale: 3,
+            ports: []
         }
     }
 
@@ -56,20 +59,23 @@ test('displays scale', () => {
     expect(rendered.props()).to.have.property("defaultValue", 3);
 })
 
-// TODO: revisit how to test event handlers
-test('onChange should be called', () => {
-    const mock = {
-        display: {
-            scale: 3
-        }
-    }
+test('displays published port');
 
-    let handler = (event, target) => {
-        console.log(event);
-        console.log(target);
-    }
+// // TODO: revisit how to test event handlers
+// test('onChange should be called', () => {
+//     const mock = {
+//         properties: {
+//             scale: 3
+//         },
+//         ports: []
+//     }
 
-    const wrapper = shallow(<EditServiceFields target={mock} onChange={handler} />);
-    let rendered = wrapper.find({ name: "scaleField" });
-    rendered.simulate('onchange');
-});
+//     let handler = (event, target) => {
+//         console.log(event);
+//         console.log(target);
+//     }
+
+//     const wrapper = shallow(<EditServiceFields target={mock} onChange={handler} />);
+//     let rendered = wrapper.find({ name: "scaleField" });
+//     rendered.simulate('onchange');
+// });
