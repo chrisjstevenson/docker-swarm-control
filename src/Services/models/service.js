@@ -1,5 +1,4 @@
 export default class Service {
-
     constructor(base) {
         this.metadata = {
           id: base.ID,

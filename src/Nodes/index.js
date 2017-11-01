@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
+import ListItemMenu from '../components/ListItemMenu';
 import Node from './models/node';
 import axios from 'axios';
 import './index.css';
@@ -31,6 +29,18 @@ export default class Nodes extends Component {
                 this.setState({hosts});
             });
     }
+    
+    openHostEditor = () => {
+        console.log('edit was clicked');
+    }
+
+    handleMenuAction1 = () => {
+        console.log('action1 was clicked');
+    }
+
+    handleMenuAction2 = () => {
+        console.log('action2 was clicked');
+    }
 
     render() {
         return (
@@ -40,18 +50,11 @@ export default class Nodes extends Component {
                         return <Card key={host.id}>
                                 <div className="ListItem">               
                                     <CardTitle title={host.hostname} subtitle={host.address} />
-                                    <div className="Menu">
-                                        <IconMenu
-                                        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-                                        anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-                                        targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                                        >
-                                            <MenuItem primaryText="Edit" />
-                                            <MenuItem primaryText="Pause" />
-                                            <MenuItem primaryText="Drain (!)" />
-                                            <MenuItem primaryText="Remove (!)" />
-                                        </IconMenu>
-                                    </div>
+                                    <ListItemMenu>
+                                        <MenuItem primaryText="Edit" onClick={this.openHostEditor} />
+                                        <MenuItem primaryText="Action1" onClick={this.handleMenuAction1} />
+                                        <MenuItem primaryText="Action2" onClick={this.handleMenuAction2} />
+                                    </ListItemMenu>
                                 </div>
                                     {
                                         host.errors.map(err => {

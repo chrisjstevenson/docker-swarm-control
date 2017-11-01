@@ -2,9 +2,7 @@ import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import EditServiceFields from './EditServiceFields';
-// import LabelEditor from './LabelEditor';
 import Service from '../models/service';
-// import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
 import assert from 'assert';
@@ -159,9 +157,7 @@ export default class EditServiceDialog extends React.Component {
                     open={this.props.open} //* determines whether this dialog is open or not */
                     onRequestClose={this.handleClose}>
                     
-                    <EditServiceFields 
-                        target={this.state.model} 
-                        onChange={this.handleFieldChange} 
+                    <EditServiceFields target={this.state.model} onChange={this.handleFieldChange} 
                     />
                 </Dialog>
 

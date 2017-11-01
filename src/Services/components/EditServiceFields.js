@@ -8,7 +8,6 @@ export default class EditServiceFields extends Component {
     }
 
     render() {
-
         return (
             <div>
                 <TextField
