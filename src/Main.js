@@ -1,45 +1,49 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom'
-import Swarm from './Swarm';
-import Nodes from './Nodes';
+import Dialog from 'material-ui/Dialog';
+import Swarm from './Swarm/';
+import Nodes from './Nodes/';
 import Services from './Services/';
 import Tasks from './Tasks';
 import Networks from './Networks';
-import {getSwarmData} from './util/swarm-api.js';
+import axios from 'axios';
 
 export default class Main extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            swarm: null,
-            nodes:[],
-            services: []
+            error: false
         }
     }
 
-    getSwarm() {
-        getSwarmData()
-            .then(({swarm, nodes, services}) => {
-                this.setState({swarm, nodes, services})
-            });
-    }
-
     componentDidMount() {
-        this.getSwarm();
+        // Perform simple check to see if we can get data back, times out 
+        // after 2 seconds. 
+        axios({url: '/swarm', timeout: 2000}).then(res => {
+            if (!res.data) this.setState({error: true});
+        })
+        .catch(err => {
+            this.setState({error: true});
+        })
     }
 
     render() {
         return (
             <main>
-                {/*https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf*/}
                 <Switch>
-                    <Route exact path='/' render={()=><Swarm swarmData={this.state.swarm}/>}/>
-                    <Route path='/nodes' render={()=><Nodes nodeData={this.state.nodes}/>}/>
+                    <Route exact path='/' render={()=><Swarm />}/>
+                    <Route path='/nodes' render={()=><Nodes />}/>
                     <Route path='/services' render={()=><Services />}/>
                     <Route path='/tasks' component={Tasks}/>
                     <Route path='/networks' component={Networks}/>
                 </Switch>
+
+                
+                <Dialog modal={false} open={this.state.error}>
+                    <i className="fa fa-exclamation-triangle fa-2"></i><r className="Alert">Unable to connect to Swarm, please check your connections and then refresh your browser.</r>
+                </Dialog>
+
             </main>
         );
     };

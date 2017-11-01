@@ -1,0 +1,19 @@
+.ListItem {
+    display: flex;
+}
+
+.Menu {
+    margin-left: auto;
+    margin-right: 2%;
+    margin-top: 20px;
+}
+
+.HostName {
+    margin-right: 20px;
+}
+
+.fa-exclamation{
+    color: rgba(241, 8, 8, 0.99);
+    text-shadow: 1px 1px 1px #ccc;
+    font-size: 1.5em;
+}

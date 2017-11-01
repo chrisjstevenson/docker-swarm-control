@@ -8,7 +8,6 @@ import {
     TableRow,
     TableRowColumn,
 } from 'material-ui/Table';
-// import Snackbar from 'material-ui/Snackbar';
 import EditMenu from './components/EditMenu';
 import EditServiceDialog from './components/EditServiceDialog';
 import Service from './models/service';
@@ -131,13 +130,6 @@ export default class Services extends Component {
                         }
                     </TableBody>
                 </Table>
-
-                {/* <Snackbar
-                    open={this.state.notify}
-                    message={`Updating ${this.state.update.name} service...`}
-                    autoHideDuration={4000}
-                   // onRequestClose={this.handleNotificationRequestClose}
-                /> */}
             </div>
         );
     };
