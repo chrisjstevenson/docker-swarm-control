@@ -19,9 +19,7 @@ export default class EditServiceDialog extends React.Component {
             update: {
                 name: ""
             }
-        };
-
-        
+        };        
     }
 
     componentDidMount() {
@@ -158,7 +156,7 @@ export default class EditServiceDialog extends React.Component {
                     title={`Edit Service`}
                     actions={actions}
                     modal={false}
-                    open={this.props.editorOpen} //* determines whether this dialog is open or not */
+                    open={this.props.open} //* determines whether this dialog is open or not */
                     onRequestClose={this.handleClose}>
                     
                     <EditServiceFields 

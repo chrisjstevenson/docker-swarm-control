@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import './index.css';
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from 'material-ui/Table';
+
+
+// Todo: Move into "menu" component for re-use.
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import MenuItem from 'material-ui/MenuItem';
+
+import { Card, CardTitle, CardText } from 'material-ui/Card';
 import EditMenu from './components/EditMenu';
 import EditServiceDialog from './components/EditServiceDialog';
 import Service from './models/service';
 import os from 'os';
 import axios from 'axios';
+import './index.css';
 
 export default class Services extends Component {
     constructor(props) {
@@ -23,12 +24,11 @@ export default class Services extends Component {
             update: {
                 name: null,
             },
-            model: []
+            services: []
         }
     }
 
     componentDidMount() {
-        // Initial fetch.
         this.fetchServices();
     }
 
@@ -47,13 +47,13 @@ export default class Services extends Component {
                     return new Service(seed);
                 })
             })
-            .then(model => {
-                console.log(`refesh state: ${JSON.stringify(model)}`);
-                this.setState({model});
+            .then(services => {
+                console.log(`refesh state: ${JSON.stringify(services)}`);
+                this.setState({services});
             });
     }
 
-    openServiceEditor = (event) => {
+    openServiceEditor = () => {
         this.setState({
             editorOpen: true
         })
@@ -65,72 +65,56 @@ export default class Services extends Component {
         })
     }
 
-    notify = (update) => {
-        this.setState({
-            notify: true,
-            update: update
-        })
-    }
-
     render() {
         let key = 0;
         return (
             <div className="Container">
-                <div>Services</div>
-                <Table>
-                    <TableHeader displaySelectAll={false}>
-                        <TableRow>
-                            <TableHeaderColumn>id</TableHeaderColumn>
-                            <TableHeaderColumn>name</TableHeaderColumn>
-                            <TableHeaderColumn>replicas</TableHeaderColumn>
-                            <TableHeaderColumn>image</TableHeaderColumn>
-                            <TableHeaderColumn>published ports</TableHeaderColumn>
-                            <TableHeaderColumn />
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {
-                            this.state.model.map(service => {
-                                return <TableRow key={service.metadata.id}>
-                                    <TableRowColumn>{service.metadata.id}</TableRowColumn>
-                                    <TableRowColumn>{service.properties.name}</TableRowColumn>
-                                    <TableRowColumn>{service.properties.scale}</TableRowColumn>
-                                    <TableRowColumn>{service.properties.image}</TableRowColumn>
-                                    <TableRowColumn>
-                                       
+                {
+                    this.state.services.map(service => {
+                        return <Card key={service.metadata.id}>
+                                <div className="ListItem">               
+                                    <CardTitle title={service.properties.name} subtitle={service.properties.image} />
+                                    <div className="Menu">
+                                        <IconMenu
+                                        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+                                        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+                                        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                                        >
+                                            <MenuItem primaryText="Edit" onClick={this.openServiceEditor} />
+                                        </IconMenu>
+                                    </div>
+                                </div>
+
+                                <CardText>                                    
+                                    <div className='Service-Detail'>
+                                        Replicas:<span className="Service-Detail-Value">{service.properties.scale}</span>
+                                    </div>
+                                    <div className='Service-Detail'>Endpoint:
+                                        <span className="Service-Detail-Value">
                                         {
                                             service.properties.ports.map(port => {
                                                 key++;
                                                 return <a
                                                   key={key}
-                                                  className="Service-link"
                                                   href={`http://${os.hostname()}:${port.published}`}
                                                   target="_blank"
                                                   rel="noopener noreferrer">{port.published}
                                                 </a>
                                             })
                                         }
-
-                                    </TableRowColumn>
-                                    <TableRowColumn>
-                                        
-                                        <EditMenu onOpenSettings={this.openServiceEditor} />   
-
-                                        <EditServiceDialog 
-                                            editorOpen={this.state.editorOpen}
-                                            onClose={this.closeServiceEditor}
-                                            serviceIdentifier={service.metadata.id} 
-                                            onRefresh={this.fetchServicesAndPoll} 
-                                            onNotify={this.notify} 
-                                        />
-
-                                    </TableRowColumn>
-                                </TableRow>
-                            })
-                        }
-                    </TableBody>
-                </Table>
+                                        </span>
+                                    </div>
+                                </CardText> 
+                                <EditServiceDialog 
+                                         open={this.state.editorOpen}
+                                         onClose={this.closeServiceEditor}
+                                         serviceIdentifier={service.metadata.id} 
+                                         onRefresh={this.fetchServicesAndPoll} 
+                                />   
+                                </Card>
+                    })
+                }
             </div>
         );
-    };
+    }
 }
