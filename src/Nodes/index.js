@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import './index.css';
-import { Card, CardTitle } from 'material-ui/Card';
+import { Card, CardTitle, CardText } from 'material-ui/Card';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
 import Node from './models/node';
 import axios from 'axios';
+import './index.css';
 
 export default class Nodes extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            model: []
+            hosts: []
         }
     }
 
@@ -28,31 +27,19 @@ export default class Nodes extends Component {
                     return new Node(n);
                 });
             })
-            .then(model => {
-                this.setState({model});
+            .then(hosts => {
+                this.setState({hosts});
             });
-    }
-
-    renderTitle(nodeInfo) {
-        if (nodeInfo.status !== 'ready') {
-            return <div>
-                        <span className="HostName">{nodeInfo.hostname}</span>
-                        <i className="fa fa-exclamation"></i>
-                    </div>
-        }
-        
-        return <span className="HostName">{nodeInfo.hostname}</span>
-        
     }
 
     render() {
         return (
             <div className="Container">
                 {
-                    this.state.model.map(node => {
-                        return <Card key={node.id}>
+                    this.state.hosts.map(host => {
+                        return <Card key={host.id}>
                                 <div className="ListItem">               
-                                    <CardTitle title={this.renderTitle(node)} subtitle={node.id} />
+                                    <CardTitle title={host.hostname} subtitle={host.address} />
                                     <div className="Menu">
                                         <IconMenu
                                         iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
@@ -66,7 +53,15 @@ export default class Nodes extends Component {
                                         </IconMenu>
                                     </div>
                                 </div>
-                                </Card>  
+                                    {
+                                        host.errors.map(err => {
+                                            return <CardText key="1">
+                                                    <i className="fa fa-exclamation-triangle fa-2"/><span className="Message">{err}</span>
+                                                   </CardText>
+                                        })
+                                    }
+                                </Card>
+
                     })
                 }
             </div>

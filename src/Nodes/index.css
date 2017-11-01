@@ -12,8 +12,7 @@
     margin-right: 20px;
 }
 
-.fa-exclamation{
-    color: rgba(241, 8, 8, 0.99);
-    text-shadow: 1px 1px 1px #ccc;
-    font-size: 1.5em;
+.Message {
+    margin-left: 3px;
+    font-style: italic;
 }

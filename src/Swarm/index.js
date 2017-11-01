@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import './index.css';
 import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Summary from './models/summary'
 import axios from 'axios';
+import './index.css';
 
 export default class Swarm extends Component {
     constructor(props) {
