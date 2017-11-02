@@ -2,16 +2,13 @@ import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import EditServiceFields from './EditServiceFields';
-import Service from '../models/service';
 import Snackbar from 'material-ui/Snackbar';
-import axios from 'axios';
-import assert from 'assert';
+import * as api from '../../api.js';
 
 export default class EditServiceDialog extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             notify: false,
             update: {
@@ -21,58 +18,10 @@ export default class EditServiceDialog extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchModel();
-    }
-
-    fetchModel() {
-        axios.get(`/services/${this.props.serviceIdentifier}`)
-            .then(res => {
-                return new Service(res.data);
-            })
-            .then(model => {
-                console.log(`refesh state: ${JSON.stringify(model)}`);
-                this.setState({model});
+        api.getServiceById(this.props.serviceIdentifier)
+            .then(service => {
+                this.setState({service});
             });
-    }
-
-    updateModel() {
-        
-        let model = {...this.state.model}
-
-        // Update the inner specification.
-        model.metadata.spec.Labels = model.properties.labels;
-        model.metadata.spec.Mode.Replicated.Replicas = parseInt(model.properties.scale, 10);
-        model.metadata.spec.EndpointSpec.Ports = model.properties.ports.map(port => {
-            return this.updatePorts(port);
-        })
-
-        console.log(`updating to new state: ${JSON.stringify(model)}`);
-
-        // Get currenet state and then post the update back to the docker daemon. 
-        return axios.get(`/services/${model.metadata.id}`)
-            .then(res => {
-                assert.equal(res.status, 200);
-                return res.data;
-            })
-            .then(existingServiceInstance => {
-                return axios.post(`/services/${model.metadata.id}/update?version=${existingServiceInstance.Version.Index}`, model.metadata.spec)
-            })
-            .then(res => {
-                assert.equal(res.status, 200);  // no body when 200ok
-            })
-            .catch(err => {
-                console.error(err.message)
-            });
-    }
-        
-    // Helper function for managing port configuration.
-    updatePorts(portConfig) {
-        return {
-            Protocol: "tcp",
-            TargetPort: parseInt(portConfig.target, 10),
-            PublishedPort: parseInt(portConfig.published, 10),
-            PublishMode: "ingress"
-        }
     }
 
     // Close the editor, sets editorOpen to false in parent state.
@@ -89,14 +38,14 @@ export default class EditServiceDialog extends React.Component {
     // handle dialog submit
     handleSubmit = () => {
 
-        // Invoke update on the model
-        this.updateModel();
+        // Update service via api.
+        api.updateServiceById(this.props.serviceIdentifier, {...this.state.service});
         
         // Invoke refresh on parent component.
         this.props.onRefresh();
 
         let updateNotification = {
-            name: this.state.model.properties.name,
+            name: this.state.service.name,
         }
 
         // Show notification on this component
@@ -114,19 +63,17 @@ export default class EditServiceDialog extends React.Component {
     }
 
     handleFieldChange = (field, value) => {
-        
-        let model = {...this.state.model}
-
+        let service = {...this.state.service}
         switch(field) {
             case "scaleField":                
-                model.properties.scale = value;
-                this.setState({model});
+            service.scale = value;
+                this.setState({service});
                 break;
             case "portsField":
-                model.properties.ports.forEach(e => {
+            service.ports.forEach(e => {
                     e.published = value;
                 })
-                this.setState({model});
+                this.setState({service});
                 break;
             default:
                 return;
@@ -151,14 +98,13 @@ export default class EditServiceDialog extends React.Component {
         return (
             <div>
                 <Dialog
-                    title={`Edit Service`}
+                    title={"Edit Service"}
                     actions={actions}
                     modal={false}
                     open={this.props.open} //* determines whether this dialog is open or not */
                     onRequestClose={this.handleClose}>
                     
-                    <EditServiceFields target={this.state.model} onChange={this.handleFieldChange} 
-                    />
+                    <EditServiceFields target={this.state.service} onChange={this.handleFieldChange} />
                 </Dialog>
 
                 <Snackbar

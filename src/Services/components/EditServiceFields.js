@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class EditServiceFields extends Component {
+export default class EditServiceFields extends React.Component {
 
     handleChange = (event) => {;
         this.props.onChange(event.target.name, event.target.value);
@@ -12,7 +12,7 @@ export default class EditServiceFields extends Component {
             <div>
                 <TextField
                     name="nameField"
-                    defaultValue={this.props.target.properties.name}
+                    defaultValue={this.props.target.name}
                     floatingLabelText="Name"
                     disabled={true}
                 />
@@ -20,21 +20,21 @@ export default class EditServiceFields extends Component {
                 <br />
                 <TextField
                     name="scaleField"
-                    defaultValue={this.props.target.properties.scale}
+                    defaultValue={this.props.target.scale}
                     floatingLabelText="Number of Replicas"
                     onChange={this.handleChange}
                 /> 
                 <br />
                 <TextField
                     name="labelsField"
-                    defaultValue={JSON.stringify(this.props.target.properties.labels, null, 2)}
+                    defaultValue={JSON.stringify(this.props.target.labels, null, 2)}
                     floatingLabelText="Labels"
                     onChange={this.handleChange}
                 />
                 <br />
                 <TextField
                     name="portsField"
-                    defaultValue={this.props.target.properties.ports.map(port => { return port.published })}
+                    defaultValue={this.props.target.ports.map(port => { return port.published })}
                     floatingLabelText="Ports"
                     onChange={this.handleChange}
                 />  

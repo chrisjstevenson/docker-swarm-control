@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
 import ListItemMenu from '../components/ListItemMenu';
-import Node from './models/node';
-import axios from 'axios';
+import * as api from '../api';
 import './index.css';
 
 export default class Nodes extends Component {
@@ -15,21 +14,12 @@ export default class Nodes extends Component {
     }
 
     componentDidMount() {
-        this.fetchNodes();
-    }
-
-    fetchNodes() {
-        axios.get(`/nodes`)
-            .then(res => {
-                return Promise.map(res.data, (n) => {
-                    return new Node(n);
-                });
-            })
+        api.getAllHosts()
             .then(hosts => {
-                this.setState({hosts});
+                this.setState({hosts})
             });
     }
-    
+
     openHostEditor = () => {
         console.log('edit was clicked');
     }

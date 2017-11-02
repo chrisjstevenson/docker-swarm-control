@@ -5,7 +5,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import './ListItemMenu.css';
 
 export default class ListItemMenu extends Component {
-
+    
     handleClick = (event) => {;
         this.props.onClick(event);
     }

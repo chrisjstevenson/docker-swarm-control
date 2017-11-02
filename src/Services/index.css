@@ -6,6 +6,10 @@
     height: 400px;
 }
 
+.Service-Details {
+    margin-bottom: 20px;
+}
+
 .Service-Detail {
     font-style: italic;
 }

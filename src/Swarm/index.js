@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import Summary from './models/summary'
-import axios from 'axios';
+import * as api from '../api';
 import './index.css';
 
 export default class Swarm extends Component {
@@ -16,16 +15,10 @@ export default class Swarm extends Component {
     }
 
     componentDidMount() {
-        this.fetchSwarmSummary();
-    }
-
-    fetchSwarmSummary() {
-        axios.get(`/swarm`)
-            .then(res => {
-                this.setState({
-                    summary: new Summary(res.data)  
-                });
-            });
+        api.getSwarmDetails()
+            .then(summary => {
+                this.setState({summary});
+            })
     }
 
     handleJoinTokenOpen = () => {
