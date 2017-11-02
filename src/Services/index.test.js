@@ -73,7 +73,13 @@ test('click menuitem to open edit service dialog', () => {
     })
 
     expect(wrapper.find('EditServiceDialog').prop('open')).equal(false);
-    wrapper.find('MenuItem').simulate('click');
+    // visibility of editservicedialog is managed by state.
+    wrapper.setState({
+        visibility: {
+            ['111111']: true
+        }
+    })
+
     expect(wrapper.find('EditServiceDialog').prop('open')).equal(true);  
 })
 

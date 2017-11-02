@@ -3,7 +3,7 @@ import TextField from 'material-ui/TextField';
 
 export default class EditServiceFields extends React.Component {
 
-    handleChange = (event) => {;
+    handleChange = (event) => {
         this.props.onChange(event.target.name, event.target.value);
     }
 

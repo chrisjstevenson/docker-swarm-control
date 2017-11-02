@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 
 export default class AddServiceFields extends Component {
-
+    
     handleChange = (event) => {;
         this.props.onChange(event.target.name, event.target.value);
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
-import MenuItem from 'material-ui/MenuItem';
+import ListItem from '../components/ListItem';
 import ListItemMenu from '../components/ListItemMenu';
 import AddItemButton from '../components/AddItemButton';
 import AddItemDialog from '../components/AddItemDialog';
@@ -14,50 +14,42 @@ export default class Services extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            editorOpen: false,
+            editOpen: false,
             createOpen: false,
-            services: []
+            services: [],
+            visibility: {}
         }
     }
 
     componentDidMount() {
-        this.fetchServices()
+        this.initialize()
+    }
+
+    initialize() {
+        api.getAllServices()
+            .then(services => {
+                this.setState({services})
+            })
     }
 
     fetchServicesAndPoll = () => {
         // Fetch and then poll to get update.
         setTimeout(() => {
-            this.fetchServices()
+            this.initialize()
             //this.refreshAndPoll(); ** uncomment to poll continuously
         }, 3000);
     }
 
-    fetchServices() {
-        api.getAllServices()
-            .then(services => {
-                //console.log(`refesh state: ${JSON.stringify(services)}`);
-                this.setState({services});
-        })
-    }
-
-    
-    // createService() {
-    //     axios.post(`/services/create`, createInstance("foo"))
-    //         .then(res => {
-    //             console.log(`created new service with id ${res.data.ID}`);
-    //         })
-    // }
-
-    openServiceEditor = () => {
-        this.setState({
-            editorOpen: true
+    openServiceEditor = (targetServiceId) => {
+        this.setState({ 
+            visibility: {
+                [targetServiceId]: true
+            }
         })
     }
 
     closeServiceEditor = () => {
-        this.setState({
-            editorOpen: false
-        })
+        this.setState({visibility: {}});
     }
 
     openAddServiceDialog = () => {
@@ -89,7 +81,8 @@ export default class Services extends Component {
                                     <div className="ListItem">               
                                         <CardTitle title={service.name} subtitle={service.image} />
                                         <ListItemMenu>
-                                            <MenuItem primaryText="Edit" onClick={this.openServiceEditor} />
+                                            {/* <MenuItem primaryText="Edit" value={service.id} onClick={this.openServiceEditor} /> */}
+                                            <ListItem primaryText="Edit" value={service.id} onClick={this.openServiceEditor} />
                                         </ListItemMenu>
                                     </div>
                                     <CardText>                                    
@@ -112,17 +105,15 @@ export default class Services extends Component {
                                             </span>
                                         </div>
                                     </CardText> 
-                                    <EditServiceDialog 
-                                            open={this.state.editorOpen}
-                                            onClose={this.closeServiceEditor}
-                                            serviceIdentifier={service.id} 
-                                            onRefresh={this.fetchServicesAndPoll} 
-                                    />   
+                                    <EditServiceDialog open={this.state.visibility[service.id] ? true : false}
+                                        onClose={this.closeServiceEditor}
+                                        serviceIdentifier={service.id}   
+                                        onRefresh={this.fetchServicesAndPoll}  />
                                   </Card>
                                 </div>
                     })
-                }
-                <AddItemButton onClick={this.openAddServiceDialog} />
+                }                                        
+                <AddItemButton onClick={this.openAddServiceDialog} />     
                 <AddItemDialog open={this.state.createOpen}                                
                                onSubmit={this.closeAddServiceDialog}  //** or submit data and then close */
                                onClose={this.closeAddServiceDialog}

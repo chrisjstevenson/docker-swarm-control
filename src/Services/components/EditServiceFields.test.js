@@ -4,14 +4,11 @@ import { expect } from 'chai';
 import EditServiceFields from './EditServiceFields';
 
 test('renders without crashing.', () => {
-
     const mock = { name: 'service1', ports: [] }
-    
     shallow(<EditServiceFields target={mock} />);
 });
 
 test('displays name in disabled field', () => {
-
     const mock = { name: 'service1', ports: [] }
     const wrapper = shallow(<EditServiceFields target={mock} />);
     let rendered = wrapper.find({ name: "nameField" });
@@ -21,7 +18,6 @@ test('displays name in disabled field', () => {
 });
 
 test('displays scale', () => {
-
     const mock = { scale: 3, ports: [] }
     const wrapper = shallow(<EditServiceFields target={mock} />);
     let rendered = wrapper.find({ name: "scaleField" });

@@ -22,6 +22,11 @@ function getAllServices() {
 function getServiceById(id) {
     return axios.get(`/services/${id}`)
         .then(res => {
+
+            if(!res.data.ID) {
+                return createEmptyServiceFacade();
+            }
+            
             return createServiceFacade(res.data);
         });
 }
@@ -36,6 +41,12 @@ function createServiceFacade(base) {
         scale: base.Spec.Mode.Replicated.Replicas,
         image: base.Spec.TaskTemplate.ContainerSpec.Image.split('@')[0],                    
         ports: getPortsFromEndpointSpec(base.Spec.EndpointSpec)
+    }
+}
+
+function createEmptyServiceFacade() {
+    return {
+        ports: []
     }
 }
 
