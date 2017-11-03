@@ -31,6 +31,11 @@ export default class Services extends Component {
         this.initialize()
     }
 
+    
+    shouldComponentUpdate() {
+        return !this.state.createOpen;
+    }    
+
     initialize() {
         api.getAllServices()
             .then(services => {
@@ -46,7 +51,7 @@ export default class Services extends Component {
         }, 3000);
     }
 
-    openServiceEditor = (targetServiceId) => {
+    openEditServiceDialog = (targetServiceId) => {
         this.setState({ 
             visibility: {
                 [targetServiceId]: true
@@ -54,7 +59,7 @@ export default class Services extends Component {
         })
     }
 
-    closeServiceEditor = () => {
+    closeEditServiceDialog = () => {
         this.setState({visibility: {}});
     }
 
@@ -68,6 +73,7 @@ export default class Services extends Component {
         this.setState({
             createOpen: false
         })
+        this.forceUpdate();
     }
 
     submitNewServiceAndCloseDialog = () => {
@@ -89,7 +95,7 @@ export default class Services extends Component {
         this.setState({newService})
     }
 
-    handleRemoveService = (targetServiceId) => {
+    removeService = (targetServiceId) => {
         api.deleteServiceById(targetServiceId);
         this.showNotify(`Removing service from Swarm...`, 4000)
         this.fetchServicesAndPoll();
@@ -127,8 +133,8 @@ export default class Services extends Component {
                                         <CardTitle title={service.name} subtitle={service.image} />
                                         <ListItemMenu>
                                             {/* <MenuItem primaryText="Edit" value={service.id} onClick={this.openServiceEditor} /> */}
-                                            <ListItem primaryText="Edit" value={service.id} onClick={this.openServiceEditor} />
-                                            <ListItem primaryText="Remove" value={service.id} onClick={this.handleRemoveService} />
+                                            <ListItem primaryText="Edit" value={service.id} onClick={this.openEditServiceDialog} />
+                                            <ListItem primaryText="Remove" value={service.id} onClick={this.removeService} />
                                         </ListItemMenu>
                                     </div>
                                     <CardText>                                    
@@ -152,7 +158,7 @@ export default class Services extends Component {
                                         </div>
                                     </CardText> 
                                     <EditServiceDialog open={this.state.visibility[service.id] ? true : false}
-                                        onClose={this.closeServiceEditor}
+                                        onClose={this.closeEditServiceDialog}
                                         serviceIdentifier={service.id}   
                                         onRefresh={this.fetchServicesAndPoll}  />
                                   </Card>
@@ -166,7 +172,7 @@ export default class Services extends Component {
                                title={"Add Service"}>
                     <AddServiceFields onChange={this.handleChange}  />
                 </AddItemDialog>    
-                <Notification openNotify={this.state.notify.open} 
+                <Notification notifyOpen={this.state.notify.open} 
                               notifyMessage={this.state.notify.message}
                               notifyDuration={this.state.notify.duration}
                               notifyClose={this.hideNotify} />           

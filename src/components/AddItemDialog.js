@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-//import Snackbar from 'material-ui/Snackbar';
 import './AddItemDialog.css';
 
 export default class AddItemDialog extends Component {
@@ -30,15 +29,7 @@ export default class AddItemDialog extends Component {
                     open={this.props.open} 
                     onRequestClose={this.props.onClose}>
                     {this.props.children}
-                
                 </Dialog>
-
-                {/* <Snackbar
-                    open={this.state.notify}
-                    message={`Creating ${this.state.update.name} service...`}
-                    autoHideDuration={10000}
-                    onRequestClose={this.handleSnackbarOnRequestClose}
-                /> */}
             </div>
         );
     }

@@ -16,7 +16,13 @@ export default class EditServiceFields extends React.Component {
                     floatingLabelText="Name"
                     disabled={true}
                 />
-                 
+                <TextField name="image" 
+                               className="Service-Field-Input"
+                               hintText="ubuntu:14.04.3" 
+                               floatingLabelText="Image" 
+                               floatingLabelFixed={true} 
+                               disabled={true}
+                />
                 <br />
                 <TextField
                     name="scaleField"
@@ -45,7 +51,6 @@ export default class EditServiceFields extends React.Component {
                     defaultValue={this.props.target.ports.map(port => { return port.target })}
                     disabled={true}
                     floatingLabelText="Target Port"
-                    onChange={this.handleChange}
                 />  
             </div>
         );
