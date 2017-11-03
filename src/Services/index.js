@@ -3,10 +3,10 @@ import { Card, CardTitle, CardText } from 'material-ui/Card';
 import ListItem from '../components/ListItem';
 import ListItemMenu from '../components/ListItemMenu';
 import AddItemButton from '../components/AddItemButton';
-import AddItemDialog from '../components/AddItemDialog';
+import EditItemDialog from '../components/EditItemDialog';
 import Notification from '../components/Notification';
 import AddServiceFields from './components/AddServiceFields';
-import EditServiceDialog from './components/EditServiceDialog';
+import EditServiceFields from './components/EditServiceFields';
 import os from 'os';
 import * as api from '../api';
 import './index.css';
@@ -15,6 +15,7 @@ export default class Services extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isDirty: false,
             editOpen: false,
             createOpen: false,
             services: [],
@@ -51,16 +52,21 @@ export default class Services extends Component {
         }, 3000);
     }
 
-    openEditServiceDialog = (targetServiceId) => {
-        this.setState({ 
-            visibility: {
-                [targetServiceId]: true
-            }
-        })
+    openEditServiceDialog = (guid) => {
+        api.getServiceById(guid)
+            .then(target => {
+                this.setState({ 
+                    target: target,
+                    visibility: {
+                        [guid]: true
+                    }
+                })
+            })
     }
 
     closeEditServiceDialog = () => {
         this.setState({visibility: {}});
+        this.forceUpdate();
     }
 
     openAddServiceDialog = () => {
@@ -77,28 +83,51 @@ export default class Services extends Component {
     }
 
     submitNewServiceAndCloseDialog = () => {
-        let newService = this.state.newService;
-        newService.ports = [];
-        newService.ports.push({
-            published: newService.published,
-            target: newService.target
+        let target = this.state.target;
+        target.ports = [];
+        target.ports.push({
+            published: target.published,
+            target: target.target
         })
-        api.createNewServiceFromSpecification(newService);
-        this.showNotify(`Creating a new service called ${newService.name}...`, 4000);
+        api.createNewServiceFromSpecification(target);
+        this.showNotify(`Creating a new service called ${target.name}...`, 4000);
         this.fetchServicesAndPoll();
         this.closeAddServiceDialog();
     }
 
-    handleChange = (name, value) => {
-        let newService = this.state.newService ? this.state.newService : {};
-        newService[name] = value;
-        this.setState({newService})
+    submitEditServiceAndCloseDialog = (guid) => {
+        if (!this.state.isDirty) {
+            this.closeEditServiceDialog();
+            return;
+        }
+        api.updateServiceSpecification(guid, this.state.target);
+        this.flash(`Updating ${this.state.target.name} service...`, 3000);
+        this.fetchServicesAndPoll();
+        this.closeEditServiceDialog();
     }
 
-    removeService = (targetServiceId) => {
-        api.deleteServiceById(targetServiceId);
+    handleFieldChange = (name, value) => {
+        let target = this.state.target ? this.state.target : {};
+        target[name] = value;
+
+        if (name === 'published') {
+            target.ports[0].published = value;
+        }
+
+        this.setState({
+            isDirty: true,
+            target: target
+        })
+    }
+
+    removeService = (guid) => {
+        api.deleteServiceById(guid);
         this.showNotify(`Removing service from Swarm...`, 4000)
         this.fetchServicesAndPoll();
+    }
+
+    flash(message, duration) {
+        this.showNotify(message, duration);
     }
 
     showNotify(message, duration) {
@@ -132,7 +161,6 @@ export default class Services extends Component {
                                     <div className="ListItem">               
                                         <CardTitle title={service.name} subtitle={service.image} />
                                         <ListItemMenu>
-                                            {/* <MenuItem primaryText="Edit" value={service.id} onClick={this.openServiceEditor} /> */}
                                             <ListItem primaryText="Edit" value={service.id} onClick={this.openEditServiceDialog} />
                                             <ListItem primaryText="Remove" value={service.id} onClick={this.removeService} />
                                         </ListItemMenu>
@@ -157,21 +185,25 @@ export default class Services extends Component {
                                             </span>
                                         </div>
                                     </CardText> 
-                                    <EditServiceDialog open={this.state.visibility[service.id] ? true : false}
-                                        onClose={this.closeEditServiceDialog}
-                                        serviceIdentifier={service.id}   
-                                        onRefresh={this.fetchServicesAndPoll}  />
+                                    <EditItemDialog open={this.state.visibility[service.id] ? true : false}
+                                        itemIdentifier={service.id}
+                                        onClose={this.closeEditServiceDialog}  
+                                        onSubmit={this.submitEditServiceAndCloseDialog}
+                                        onRefresh={this.fetchServicesAndPoll}
+                                        title={`Edit ${service.name}`}>
+                                        <EditServiceFields target={service} onChange={this.handleFieldChange} />
+                                    </EditItemDialog>    
                                   </Card>
                                 </div>
                     })
                 }                                        
                 <AddItemButton onClick={this.openAddServiceDialog} />     
-                <AddItemDialog open={this.state.createOpen}                                
+                <EditItemDialog open={this.state.createOpen}                                
                                onSubmit={this.submitNewServiceAndCloseDialog}
                                onClose={this.closeAddServiceDialog}
                                title={"Add Service"}>
-                    <AddServiceFields onChange={this.handleChange}  />
-                </AddItemDialog>    
+                    <AddServiceFields onChange={this.handleFieldChange}  />
+                </EditItemDialog>    
                 <Notification notifyOpen={this.state.notify.open} 
                               notifyMessage={this.state.notify.message}
                               notifyDuration={this.state.notify.duration}

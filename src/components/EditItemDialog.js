@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-import './AddItemDialog.css';
+import './EditItemDialog.css';
 
-export default class AddItemDialog extends Component {
+export default class EditItemDialog extends Component {
+
+    handleFormSubmit = () => {
+        this.props.onSubmit(this.props.itemIdentifier);
+    }
 
     render() {
         const actions = [
@@ -16,7 +20,7 @@ export default class AddItemDialog extends Component {
                 label="Submit"
                 primary={true}
                 keyboardFocused={true}
-                onClick={this.props.onSubmit} 
+                onClick={this.handleFormSubmit} 
             />
         ];
 

@@ -54,7 +54,7 @@ test('displays service details', () => {
     expect(wrapper.find('a').html()).contains(1111)
 })
 
-test('click menuitem to open edit service dialog', () => {
+test('set visibility to open edit item dialog', () => {
     const mock = [
         {
             id: "111111",
@@ -71,22 +71,20 @@ test('click menuitem to open edit service dialog', () => {
         services: mock
     })
 
-    expect(wrapper.find('EditServiceDialog').prop('open')).equal(false);
-    // visibility of editservicedialog is managed by state.
+    expect(wrapper.find({itemIdentifier: '111111'}).prop('open')).equal(false);
     wrapper.setState({
         visibility: {
             ['111111']: true
         }
     })
-
-    expect(wrapper.find('EditServiceDialog').prop('open')).equal(true);  
+    expect(wrapper.find({itemIdentifier: '111111'}).prop('open')).equal(true);  
 })
 
 test('click + button to show add item dialog', () => {
     const wrapper = shallow(<Services />);
-    expect(wrapper.find('AddItemDialog').prop('open')).equal(false);
+    expect(wrapper.find('EditItemDialog').prop('open')).equal(false);
     wrapper.find('AddItemButton').simulate('click');
-    expect(wrapper.find('AddItemDialog').prop('open')).equal(true);  
+    expect(wrapper.find('EditItemDialog').prop('open')).equal(true);  
 })
 
 test('flash notify when clicking remove', () => {

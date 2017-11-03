@@ -8,19 +8,24 @@ test('renders without crashing.', () => {
     shallow(<EditServiceFields target={mock} />);
 });
 
-test('displays name in disabled field', () => {
-    const mock = { name: 'service1', ports: [] }
+test('displays uneditable fields as disabled', () => {
+    const mock = { name: 'service1', image: 'image1', ports: [{published: '80', target: '81'}] }
     const wrapper = shallow(<EditServiceFields target={mock} />);
-    let rendered = wrapper.find({ name: "nameField" });
+    
+    let rendered = wrapper.find({ name: "name" });
+    expect(rendered.props()).to.have.property("disabled", true);
 
-    expect(rendered.props()).to.have.property("defaultValue", "service1");
+    rendered = wrapper.find({ name: "image" });
+    expect(rendered.props()).to.have.property("disabled", true);
+
+    rendered = wrapper.find({ name: "target" });
     expect(rendered.props()).to.have.property("disabled", true);
 });
 
 test('displays scale', () => {
     const mock = { scale: 3, ports: [] }
     const wrapper = shallow(<EditServiceFields target={mock} />);
-    let rendered = wrapper.find({ name: "scaleField" });
+    let rendered = wrapper.find({ name: "scale" });
 
     expect(rendered.props()).to.have.property("defaultValue", 3);
 })

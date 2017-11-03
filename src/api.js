@@ -4,7 +4,7 @@ import assert from 'assert';
 export { 
     getAllServices, 
     getServiceById, 
-    updateServiceById,
+    updateServiceSpecification,
     getAllHosts, 
     getSwarmDetails,
     createNewServiceFromSpecification,
@@ -65,15 +65,15 @@ function getPortsFromEndpointSpec(endpointSpec) {
     return ports;
 }
 
-function updateServiceById(id, update) {
-    return axios.get(`/services/${id}`)
+function updateServiceSpecification(guid, updatedSpec) {
+    return axios.get(`/services/${guid}`)
         .then(res => {
             assert.equal(res.status, 200);
             return res.data;
         })
         .then(existingServiceInstance => {
             let version = existingServiceInstance.Version.Index;
-            return axios.post(`/services/${id}/update?version=${version}`, createNewServiceSpecification(update))
+            return axios.post(`/services/${guid}/update?version=${version}`, createNewServiceSpecification(updatedSpec))
         })
         .then(res => {
             assert.equal(res.status, 200);  // no body when 200ok

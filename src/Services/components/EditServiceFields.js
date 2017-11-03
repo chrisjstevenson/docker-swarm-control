@@ -9,61 +9,55 @@ export default class EditServiceFields extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="Service-Fields">
+                <div className="Service-Field">
+                    <TextField
+                        name="name"
+                        className="Service-Field-Input"
+                        defaultValue={this.props.target.name}
+                        floatingLabelText="Name"
+                        disabled={true}
+                    />
+                    <TextField name="image" 
+                        defaultValue={this.props.target.image}
+                        floatingLabelText="Image" 
+                        floatingLabelFixed={true} 
+                        disabled={true}
+                    />
+                </div>
+                <div className="Service-Field">
                 <TextField
-                    name="nameField"
-                    defaultValue={this.props.target.name}
-                    floatingLabelText="Name"
-                    disabled={true}
-                />
-                <TextField name="image" 
-                               className="Service-Field-Input"
-                               hintText="ubuntu:14.04.3" 
-                               floatingLabelText="Image" 
-                               floatingLabelFixed={true} 
-                               disabled={true}
-                />
-                <br />
-                <TextField
-                    name="scaleField"
+                    name="scale"
                     defaultValue={this.props.target.scale}
                     floatingLabelText="Number of Replicas"
                     onChange={this.handleChange}
                 /> 
-                <br />
+                </div>
+                <div className="Service-Field">
                 <TextField
-                    name="labelsField"
+                    name="labels"
                     defaultValue={JSON.stringify(this.props.target.labels, null, 2)}
                     floatingLabelText="Labels"
                     onChange={this.handleChange}
                 />
-                <br />
+                </div>
+                <div className="Service-Field">
                 <TextField
-                    name="portsField"
+                    name="published"
                     className="Service-Field-Input"
                     defaultValue={this.props.target.ports.map(port => { return port.published })}
                     floatingLabelText="Published Port"
                     onChange={this.handleChange}
                 />  
                 <TextField
-                    name="portsField"
+                    name="target"
                     className="Service-Field-Input"
                     defaultValue={this.props.target.ports.map(port => { return port.target })}
                     disabled={true}
                     floatingLabelText="Target Port"
                 />  
+                </div>
             </div>
         );
-    }
-}
-
-EditServiceFields.defaultProps = {
-    target: {
-        properties: {
-            name: "",
-            labels: "",
-            scale: 0,
-            ports: []// ** can't seem to default this
-        }
     }
 }
