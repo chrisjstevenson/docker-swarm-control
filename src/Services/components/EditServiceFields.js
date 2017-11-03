@@ -34,8 +34,17 @@ export default class EditServiceFields extends React.Component {
                 <br />
                 <TextField
                     name="portsField"
+                    className="Service-Field-Input"
                     defaultValue={this.props.target.ports.map(port => { return port.published })}
-                    floatingLabelText="Ports"
+                    floatingLabelText="Published Port"
+                    onChange={this.handleChange}
+                />  
+                <TextField
+                    name="portsField"
+                    className="Service-Field-Input"
+                    defaultValue={this.props.target.ports.map(port => { return port.target })}
+                    disabled={true}
+                    floatingLabelText="Target Port"
                     onChange={this.handleChange}
                 />  
             </div>

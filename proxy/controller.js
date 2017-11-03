@@ -60,6 +60,25 @@ controller.updateService = function(req, res) {
     })
 }
 
+controller.createService = function(req, res) {
+    log.info(`Request Body: ${JSON.stringify(req.body)}`);
+    let options = {
+        url: `${url}/services/create`,
+        json: true,
+        body: req.body
+    }
+    return request.postAsync(options).then(response => {
+        if(response.statusCode != 200) {
+            log.error(response.body);
+        }
+        res.send(response.body);
+    })
+}
+
+controller.deleteService = function(req, res) {
+    return request.deleteAsync(`${url}/services/${req.params.id}`).then(response => res.send(response.body));
+}
+
 controller.getAllTasks = function(req, res) {
     return request.getAsync(`${url}/tasks`).then(response => res.send(response.body));
 };

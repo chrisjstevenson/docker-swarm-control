@@ -6,7 +6,9 @@ export {
     getServiceById, 
     updateServiceById,
     getAllHosts, 
-    getSwarmDetails 
+    getSwarmDetails,
+    createNewServiceFromSpecification,
+    deleteServiceById 
 }
 
 function getAllServices() {
@@ -26,7 +28,7 @@ function getServiceById(id) {
             if(!res.data.ID) {
                 return createEmptyServiceFacade();
             }
-            
+
             return createServiceFacade(res.data);
         });
 }
@@ -102,6 +104,29 @@ function createNewPortConfig(port) {
 }
 
 
+function createNewServiceFromSpecification(spec) {
+    let serviceSpecification = createDefaultSpec();
+    serviceSpecification.Name = spec.name;
+    serviceSpecification.TaskTemplate.ContainerSpec.Image = spec.image;
+    serviceSpecification.Mode.Replicated.Replicas = parseInt(spec.scale, 10);
+    serviceSpecification.EndpointSpec.Ports = spec.ports.map(port => {
+        return createNewPortConfig(port);
+    })
+    
+    return axios.post('/services/create', serviceSpecification)
+        .then(res => {
+            assert.equal(res.status, 200);
+            return res.data.ID;
+        });
+}
+
+function deleteServiceById(id) {
+    return axios.delete(`/services/${id}`)
+        .then(res => {
+            return res.data;
+        })
+}
+
 
 function getAllHosts() {
     return axios.get('/nodes')
@@ -141,6 +166,64 @@ function getSwarmDetails() {
 
 
 
+
+function createDefaultSpec() {
+    return {
+        Name: "web",
+        TaskTemplate: {
+          ContainerSpec: {
+            Image: "nginx:alpine"
+          },
+          LogDriver: {
+            Name: "json-file",
+            Options: {
+              "max-file": "3",
+              "max-size": "10M"
+            }
+          },
+          Placement: {},
+          Resources: {
+            Limits: {
+              MemoryBytes: 104857600
+            },
+            Reservations: {}
+          },
+          RestartPolicy: {
+            Condition: "on-failure",
+            Delay: 10000000000,
+            MaxAttempts: 10
+          }
+        },
+        Mode: {
+          Replicated: {
+            Replicas: 1
+          }
+        },
+        UpdateConfig: {
+          Parallelism: 2,
+          Delay: 1000000000,
+          FailureAction: "pause",
+          Monitor: 15000000000,
+          MaxFailureRatio: 0.15
+        },
+        RollbackConfig: {
+          Parallelism: 1,
+          Delay: 1000000000,
+          FailureAction: "pause",
+          Monitor: 15000000000,
+          MaxFailureRatio: 0.15
+        },
+        EndpointSpec: {
+          Ports: [
+            {
+              Protocol: "tcp",
+              PublishedPort: 8080,
+              TargetPort: 80
+            }
+          ]
+        }
+      }
+}
 
 
 

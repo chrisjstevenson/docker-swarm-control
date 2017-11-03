@@ -7,6 +7,8 @@ module.exports = function(app) {
     app.get('/services', controller.getAllServices);
     app.get('/services/:id', controller.getServiceById);
     app.post('/services/:id/update', controller.updateService);
+    app.post('/services/create', controller.createService);
+    app.delete('/services/:id', controller.deleteService);
     app.get('/tasks', controller.getAllTasks);
     app.get('/nodes/:id', controller.getNodeById);
 

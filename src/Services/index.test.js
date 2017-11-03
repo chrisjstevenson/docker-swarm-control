@@ -41,7 +41,6 @@ test('displays service details', () => {
             scale: 4,
             image: "image1",
             ports: [{ published: 1111 }]
-            
         }
     ]
 
@@ -88,4 +87,27 @@ test('click + button to show add item dialog', () => {
     expect(wrapper.find('AddItemDialog').prop('open')).equal(false);
     wrapper.find('AddItemButton').simulate('click');
     expect(wrapper.find('AddItemDialog').prop('open')).equal(true);  
+})
+
+test('flash notify when clicking remove', () => {
+    const mock = [
+        {
+            id: "111111",
+            name: "service1",
+            scale: 4,
+            image: "image1",
+            ports: [{ published: 1111 }]
+            
+        }
+    ]
+
+    const wrapper = shallow(<Services />);
+    wrapper.setState({
+        services: mock
+    })
+
+    // Todo: need to mock api call. 
+    //wrapper.find({primaryText: 'Remove'}).simulate('click');
+    //expect(wrapper.find('Nofitication').prop('openNotify')).equal(true);
+    //expect(wrapper.find('Nofitication').prop('notifyMessage')).equal("Removing service from Swarm...");
 })

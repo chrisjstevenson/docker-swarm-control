@@ -28,8 +28,7 @@ export default class AddItemDialog extends Component {
                     actions={actions}
                     modal={false}
                     open={this.props.open} 
-                    onRequestClose={this.handleClose}>
-                    
+                    onRequestClose={this.props.onClose}>
                     {this.props.children}
                 
                 </Dialog>

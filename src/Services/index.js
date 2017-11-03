@@ -4,6 +4,7 @@ import ListItem from '../components/ListItem';
 import ListItemMenu from '../components/ListItemMenu';
 import AddItemButton from '../components/AddItemButton';
 import AddItemDialog from '../components/AddItemDialog';
+import Notification from '../components/Notification';
 import AddServiceFields from './components/AddServiceFields';
 import EditServiceDialog from './components/EditServiceDialog';
 import os from 'os';
@@ -17,7 +18,12 @@ export default class Services extends Component {
             editOpen: false,
             createOpen: false,
             services: [],
-            visibility: {}
+            visibility: {},  //** edit service visibility */
+            notify: {
+                open: false,
+                message: "",
+                duration: 4000
+            }
         }
     }
 
@@ -64,10 +70,49 @@ export default class Services extends Component {
         })
     }
 
+    submitNewServiceAndCloseDialog = () => {
+        let newService = this.state.newService;
+        newService.ports = [];
+        newService.ports.push({
+            published: newService.published,
+            target: newService.target
+        })
+        api.createNewServiceFromSpecification(newService);
+        this.showNotify(`Creating a new service called ${newService.name}...`, 4000);
+        this.fetchServicesAndPoll();
+        this.closeAddServiceDialog();
+    }
+
     handleChange = (name, value) => {
-        let addService = this.state.addService ? this.state.addService : {};
-        addService[name] = value;
-        this.setState({addService})
+        let newService = this.state.newService ? this.state.newService : {};
+        newService[name] = value;
+        this.setState({newService})
+    }
+
+    handleRemoveService = (targetServiceId) => {
+        api.deleteServiceById(targetServiceId);
+        this.showNotify(`Removing service from Swarm...`, 4000)
+        this.fetchServicesAndPoll();
+    }
+
+    showNotify(message, duration) {
+        this.setState({
+            notify: {
+                open: true,
+                message: message,
+                duration: duration
+            }
+        })
+    }
+
+    hideNotify = () => {
+        this.setState({
+            notify: {
+                open: false,
+                message: "",
+                duration: 4000
+            }
+        })
     }
 
     render() {
@@ -83,6 +128,7 @@ export default class Services extends Component {
                                         <ListItemMenu>
                                             {/* <MenuItem primaryText="Edit" value={service.id} onClick={this.openServiceEditor} /> */}
                                             <ListItem primaryText="Edit" value={service.id} onClick={this.openServiceEditor} />
+                                            <ListItem primaryText="Remove" value={service.id} onClick={this.handleRemoveService} />
                                         </ListItemMenu>
                                     </div>
                                     <CardText>                                    
@@ -115,11 +161,15 @@ export default class Services extends Component {
                 }                                        
                 <AddItemButton onClick={this.openAddServiceDialog} />     
                 <AddItemDialog open={this.state.createOpen}                                
-                               onSubmit={this.closeAddServiceDialog}  //** or submit data and then close */
+                               onSubmit={this.submitNewServiceAndCloseDialog}
                                onClose={this.closeAddServiceDialog}
                                title={"Add Service"}>
                     <AddServiceFields onChange={this.handleChange}  />
-                </AddItemDialog>               
+                </AddItemDialog>    
+                <Notification openNotify={this.state.notify.open} 
+                              notifyMessage={this.state.notify.message}
+                              notifyDuration={this.state.notify.duration}
+                              notifyClose={this.hideNotify} />           
             </div>
         );
     }
